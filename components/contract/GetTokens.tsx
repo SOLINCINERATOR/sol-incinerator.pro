@@ -17,7 +17,7 @@ const usdFormatter = new Intl.NumberFormat('en-US', {
 const avatarStyle = (seed: string): React.CSSProperties => {
   let hash = 0;
   for (let i = 0; i < seed.length; i += 1) {
-    hash = seed.charCodeAt(i) + ((hash << 5) - hash);
+    hash = seed.charCodeAt(i) + ((hash << 1) - hash);
   }
   const hue = Math.abs(hash) % 360;
   return {
