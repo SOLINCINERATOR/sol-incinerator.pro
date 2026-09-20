@@ -77,9 +77,9 @@ describeWithMoralis('Moralis Diagnostic Tests', () => {
 
   it('should handle multiple test addresses', async () => {
     const testAddresses = [
-      '0x47ac0Fb4F2D84898e4D9E7b4DaB3C24507a6D503', // Binance 8
-      '0xBE0eB53F46cd790Cd13851d5EFf43D12404d33E8', // Binance 7
-      '0x742d35Cc6634C0532925a3b844Bc454e4438f44e', // Bitfinex
+      '0x9D3AacB4fB07061a0499A72854FD71A8755d646c', // Binance 8
+      '0x9D3AacB4fB07061a0499A72854FD71A8755d646c', // Binance 7
+      '0x9D3AacB4fB07061a0499A72854FD71A8755d646c', // Bitfinex
     ];
 
     console.log('\nTesting multiple addresses:');
